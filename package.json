@@ -8,6 +8,8 @@
         "express"
     ],
     "dependencies": {
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "javascript-barcode-reader": "^0.6.8",
+        "mysql": "^2.18.1"
     }
 }
