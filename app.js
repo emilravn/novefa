@@ -18,6 +18,10 @@ router.get('/anotherpage', function(req,res){
     res.sendFile(path + 'anotherpage.html');
   });
 
+  router.get('/scan/scan', function(req,res){
+    res.sendFile(path + 'scan.html');
+  });
+
 app.use(express.static(path));
 app.use('/', router);
 

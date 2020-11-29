@@ -1,20 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-
-    <h2>My First JavaScript</h2>
-
-    <label for="lot">lot nummer:</label>
-    <input type="text" id="lot" name="lot" autofocus><br><br>
-    <label for="action">Action:</label>
-    <input type="text" id="action" name="action"><br><br>
-    <p id="message"></p>
-    <p id="message2">he</p>
-
-    <script type="text/javascript">
 var formReady = false;
 var actionField = document.getElementById("action");
 var lotField = document.getElementById("lot");
@@ -52,8 +35,3 @@ function sendData() {
 
   }
     });
-
-
-    </script>
-</body>
-</html>

@@ -1,0 +1,10 @@
+#username {
+    display: block;
+}
+#password {
+    display: block;
+}
+
+form {
+    padding-bottom: 2em;
+}

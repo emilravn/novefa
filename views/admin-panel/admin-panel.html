@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novefa - Admin Panel</title>
+    <link rel="stylesheet" href="admin-panel.css">
+    <!--Include js-->
+    <script src="admin-panel.js"></script>
+    <!--Include barcode.js plugin to generate barcodes-->
+    <script src="../plugins/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+    <h2>Novefa admin table</h2>
+    <table>
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Age</th>
+        </tr>
+        <tr>
+          <td>Jill</td>
+          <td>Smith</td>
+          <td>50</td>
+        </tr>
+        <tr>
+          <td>Eve</td>
+          <td>Jackson</td>
+          <td>94</td>
+        </tr>
+      </table>
+
+
+
+
+    <!--Buttons to print new barcodes-->
+    <button id="PrintProduce" onclick="PrintProduce();">Print new Seed</button>
+    <button id="PrintTray" onclick="PrintTray();">Print new Tray</button>
+    <button id="PrintShelf" onclick="PrintShelf();">Print new Shelf</button>
+    <br>
+    
+
+    <!-- Let user manually enter a barcode (if one goes missing or is destroyed)-->
+    <input type="text" name="txt_input" id="txt_input">
+    <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
+
+    <!-- Container for the barcode-->
+    <svg id="code128"></svg>
+
+
+
+
+</body>
+</html>
