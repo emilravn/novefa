@@ -37,4 +37,30 @@ function PrintProduce() {
   function ManualBarcodeEntry(){
     var text = document.getElementById("txt_input").value;
     JsBarcode("#code128", text);
+    window.print(JsBarcode("#code128", text));
+
+     // Print in browser test
+    popup = window.open();
+    popup.document.write("imagehtml");
+    popup.focus(); //required for IE
+    popup.print();
+   
   }
+
+
+  function ImagetoPrint(source) {
+    return "<html><head><script>function step1(){\n" +
+            "setTimeout('step2()', 10);}\n" +
+            "function step2(){window.print();window.close()}\n" +
+            "</scri" + "pt></head><body onload='step1()'>\n" +
+            "<svg id=" + source + "' /></body></html>";
+            
+}
+
+function PrintImage(source) {
+    Pagelink = "about:blank";
+    var pwa = window.open(Pagelink, "_new");
+    pwa.document.open();
+    pwa.document.write(ImagetoPrint(source));
+    pwa.document.close();
+}

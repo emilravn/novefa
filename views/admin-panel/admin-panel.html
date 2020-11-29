@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novefa - Admin Panel</title>
+    <!-- Include stylesheet-->
     <link rel="stylesheet" href="admin-panel.css">
-    <!--Include js-->
+    <!--Include .js-->
     <script src="admin-panel.js"></script>
     <!--Include barcode.js plugin to generate barcodes-->
     <script src="../plugins/JsBarcode.all.min.js"></script>
 </head>
 <body>
 
+    <!-- Placeholder-->
     <h2>Novefa admin table</h2>
     <table>
         <tr>
@@ -38,16 +40,17 @@
     <button id="PrintProduce" onclick="PrintProduce();">Print new Seed</button>
     <button id="PrintTray" onclick="PrintTray();">Print new Tray</button>
     <button id="PrintShelf" onclick="PrintShelf();">Print new Shelf</button>
-    <br>
     
+    <br>
 
-    <!-- Let user manually enter a barcode (if one goes missing or is destroyed)-->
+    <!-- Let user manually create a barcode-->
     <input type="text" name="txt_input" id="txt_input">
     <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
 
     <!-- Container for the barcode-->
     <svg id="code128"></svg>
 
+    <a href="#" onclick="PrintImage('code128'); return false;"><button id="printImage">Print this Image</button></a>
 
 
 
