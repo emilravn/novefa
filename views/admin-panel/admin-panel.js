@@ -52,7 +52,7 @@ function PrintProduce() {
         //TODO: Der skal nok lige laves settere. Og inde i de settere skal databasen så opdateres?
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
-            constructor(shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, addToallLots = false) {
+            constructor(shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
                 this.shelf = shelf;
                 this.tray = tray;
                 this.lot = lot;
@@ -65,11 +65,13 @@ function PrintProduce() {
                 this.weight = weight;
                 this.sentTo = sentTo;
 
-                if (addToallLots) {
+                if (newLot) {
                     allLots.push(this);
                 }
 
                 this.addToTable();
+                var urlQuery = `newLot?values=${this.shelf}_${this.tray}_${this.lot}_${this.type}_${this.status}_${this.sown.toISOString()}_${this.underLight}_${this.partialHarvest}_${this.harvested}_${this.weight}_${this.sentTo}`;
+                this.updateDB(urlQuery);
             }
 
             //bruges når der skal laves helt nye lots.
@@ -152,5 +154,18 @@ function PrintProduce() {
                     element.innerHTML = allLots[rowCount].timeDif(allLots[rowCount].harvested);
                 }
 
+            }
+
+            updateDB(url) {
+                //url eksempel: "searching?lot=" + lotField.value + "&action=" + actionField.value
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //document.getElementById("message2").innerHTML = this.responseText;
+                        //TODO: måske lav en eller anden response message der bliver vist?
+                    }
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
             }
         }
