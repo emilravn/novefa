@@ -85,12 +85,51 @@ function PrintProduce() {
 
             //TODO: get sownAge, get underlight age. hvor den retunerer tidsforskellen. eg. 3 days, 5 hours.
             //setter and getters:
-            //setShelf osv.
             set setShelf(value) {
                 this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=shelf`);
                 this.shelf = value;
-                console.log(this.shelf);
             }
+            set setTray(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=tray`);
+                this.tray = value;
+            }
+            set setLot(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=lot`);
+                this.lot = value;
+            }
+            set setType(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=type`);
+                this.type = value;
+            }
+            set setStatus(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=status`);
+                this.status = value;
+            }
+            set setSown(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=sown`);
+                this.sown = value;
+            }
+            set setUnderLight(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=underlight`);
+                this.underLight = value;
+            }
+            set setPartialHarvest(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=partialHarvest`);
+                this.partialHarvest = value;
+            }
+            set setHarvested(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=harvested`);
+                this.harvested = value;
+            }
+            set setWeight(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=weight`);
+                this.weight = value;
+            }
+            set setSentTo(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=sentTo`);
+                this.sentTo = value;
+            }
+
 
 
 
