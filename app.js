@@ -33,7 +33,8 @@ app.listen(port, function () {
 
 var mysql = require('mysql');
 
-function handleSql(query) {
+function handleSql(query, responseAction = "", callback) {
+
     var con = mysql.createConnection({
         host: "mysql78.unoeuro.com",
         user: "multicrypt_io",
@@ -45,9 +46,29 @@ function handleSql(query) {
     });
     con.query(query, function (err, result, fields) {
         if (err) throw err;
+
+        if (responseAction == "return id") {
+            //Object.keys(result).forEach(function (key) { //disse linjer skal måske bruges når alle lots til hentes. 
+                //console.log(result[key].id);
+                //response += result[key].id.toString();
+            //});
+            return callback(result[0].id);
+            
+        }
+            
     });
     con.end();
 };
+
+app.get('/admin-panel/getNewestId', function (req, res) {
+
+    var query = `select * from lots order by id desc limit 1;`;
+
+    handleSql(query, "return id", function (result) {
+        res.send(result.toString());
+    });
+    
+});
 
 
 app.get('/admin-panel/newLot', function (req, res) {
@@ -66,6 +87,22 @@ app.get('/admin-panel/newLot', function (req, res) {
 
     res.send("WHEEE (response text)");
 });
+
+app.get('/admin-panel/updateLot', function (req, res) {
+    var value = req.query.value;
+    var attribute = req.query.attribute;
+    var id = req.query.id;
+
+
+    var query = `update lots set ${attribute} = ${value} where id = ${id};`;
+
+    handleSql(query);
+
+
+    res.send("WHEEE (response text)");
+});
+
+
 
 app.get('/searching', function (req, res) {
     var lot = req.query.lot;

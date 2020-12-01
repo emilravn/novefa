@@ -25,6 +25,7 @@
     </table>
 
     <button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>
+    <button onclick="allLots[0].setShelf = 20">change variable</button>
 
     <table id="inactiveLotsTable" style="margin-top:300px;">
         <tr>
@@ -49,7 +50,7 @@
     <!--Modal TODO: add close on close button, and clicking outside the modal
         remember to set printer as default to not, get a pop-up asking to print on chrome browser
     -->
-    <dialog id="Modal" >
+    <dialog id="Modal">
 
         <!--Print buttons-->
         <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>

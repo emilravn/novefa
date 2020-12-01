@@ -46,13 +46,14 @@ function PrintProduce() {
    var activeTable = document.getElementById("activeLotsTable");
         var inactiveTable = document.getElementById("inactiveLotsTable");
         var allLots = []; //TODO: fuld denne ud fra backend, og indsæt alle i dom. og det er nok egentligt kun active lots.
-        var inactiveLots = []; //samme som ovenfor.
+        var inactiveLots = []; //samme som ovenfor. Bruges nok ikke, men bør den det?
         var rowCount = 0;
 
         //TODO: Der skal nok lige laves settere. Og inde i de settere skal databasen så opdateres?
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
-            constructor(shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
+            constructor(id, shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
+                this.id = id;
                 this.shelf = shelf;
                 this.tray = tray;
                 this.lot = lot;
@@ -64,14 +65,14 @@ function PrintProduce() {
                 this.harvested = harvested;
                 this.weight = weight;
                 this.sentTo = sentTo;
+                
 
                 if (newLot) {
-                    allLots.push(this);
+                    this.getIdAndInsert(this);
                 }
-
-                this.addToTable();
-                var urlQuery = `newLot?values=${this.shelf}_${this.tray}_${this.lot}_${this.type}_${this.status}_${this.sown.toISOString()}_${this.underLight}_${this.partialHarvest}_${this.harvested}_${this.weight}_${this.sentTo}`;
-                this.updateDB(urlQuery);
+                else {
+                    this.addToTable();
+                }
             }
 
             //bruges når der skal laves helt nye lots.
@@ -79,8 +80,21 @@ function PrintProduce() {
                 var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
                 var sownTime = new Date();
                 //TODO: indsæt i database.
-                return new Lot(null, tray, lotNumber, type, "sown", sownTime, null, null, null, null, null, true);
+                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, null, null, null, null, true);
             }
+
+            //TODO: get sownAge, get underlight age. hvor den retunerer tidsforskellen. eg. 3 days, 5 hours.
+            //setter and getters:
+            //setShelf osv.
+            set setShelf(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=shelf`);
+                this.shelf = value;
+                console.log(this.shelf);
+            }
+
+
+
+                
 
 
             timeDif(oldDate) {
@@ -154,6 +168,22 @@ function PrintProduce() {
                     element.innerHTML = allLots[rowCount].timeDif(allLots[rowCount].harvested);
                 }
 
+            }
+
+            getIdAndInsert(lotObject) {
+                var urlQuery = `newLot?values=${lotObject.shelf}_${lotObject.tray}_${lotObject.lot}_${lotObject.type}_${lotObject.status}_${lotObject.sown.toISOString()}_${lotObject.underLight}_${lotObject.partialHarvest}_${lotObject.harvested}_${lotObject.weight}_${lotObject.sentTo}`;
+                lotObject.updateDB(urlQuery);
+
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        lotObject.id = this.responseText;
+                        allLots.push(lotObject);
+                        lotObject.addToTable();
+                    }
+                };
+                xmlhttp.open("GET", "getNewestId", true);
+                xmlhttp.send();
             }
 
             updateDB(url) {
