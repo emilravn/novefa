@@ -93,8 +93,13 @@ app.get('/admin-panel/updateLot', function (req, res) {
     var attribute = req.query.attribute;
     var id = req.query.id;
 
+    var insertAsInt = req.query.insertasint;
+    var citation = "'";
+    if (insertAsInt == "true") {
+        citation = "";
+    }
 
-    var query = `update lots set ${attribute} = ${value} where id = ${id};`;
+    var query = `update lots set ${attribute} = ${citation}${value}${citation} where id = ${id};`;
 
     handleSql(query);
 

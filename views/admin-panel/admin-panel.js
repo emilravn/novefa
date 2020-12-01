@@ -44,21 +44,19 @@ function PrintProduce() {
 
 // Table code (thomas)
    var activeTable = document.getElementById("activeLotsTable");
-        var inactiveTable = document.getElementById("inactiveLotsTable");
-        var allLots = []; //TODO: fuld denne ud fra backend, og indsæt alle i dom. og det er nok egentligt kun active lots.
-        var inactiveLots = []; //samme som ovenfor. Bruges nok ikke, men bør den det?
-        var rowCount = 0;
+   var inactiveTable = document.getElementById("inactiveLotsTable");
+   var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objectet.
 
-        //TODO: Der skal nok lige laves settere. Og inde i de settere skal databasen så opdateres?
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
             constructor(id, shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
+                this.DOMobject = null;
                 this.id = id;
                 this.shelf = shelf;
                 this.tray = tray;
                 this.lot = lot;
                 this.type = type;
-                this.status = status; //TODO: skal nok laves til enum.
+                this.status = status;
                 this.sown = sown;
                 this.underLight = underLight;
                 this.partialHarvest = partialHarvest;
@@ -79,22 +77,20 @@ function PrintProduce() {
             static createNewLot(tray, type) {
                 var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
                 var sownTime = new Date();
-                //TODO: indsæt i database.
                 return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, null, null, null, null, true);
             }
 
-            //TODO: get sownAge, get underlight age. hvor den retunerer tidsforskellen. eg. 3 days, 5 hours.
-            //setter and getters:
+            //setter and getters: bør de også opdatere dom?
             set setShelf(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=shelf`);
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=shelf`, true);
                 this.shelf = value;
             }
             set setTray(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=tray`);
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=tray`), true;
                 this.tray = value;
             }
             set setLot(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=lot`);
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=lot`), true;
                 this.lot = value;
             }
             set setType(value) {
@@ -106,11 +102,13 @@ function PrintProduce() {
                 this.status = value;
             }
             set setSown(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=sown`);
+                var ISOvalue = value.toISOString();
+                this.updateDB(`updateLot?id=${this.id}&value=${ISOvalue}&attribute=sown`);
                 this.sown = value;
             }
             set setUnderLight(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=underlight`);
+                var ISOvalue = value.toISOString();
+                this.updateDB(`updateLot?id=${this.id}&value=${ISOvalue}&attribute=underlight`);
                 this.underLight = value;
             }
             set setPartialHarvest(value) {
@@ -118,11 +116,12 @@ function PrintProduce() {
                 this.partialHarvest = value;
             }
             set setHarvested(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=harvested`);
+                var ISOvalue = value.toISOString();
+                this.updateDB(`updateLot?id=${this.id}&value=${ISOvalue}&attribute=harvested`);
                 this.harvested = value;
             }
             set setWeight(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=weight`);
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=weight`, true);
                 this.weight = value;
             }
             set setSentTo(value) {
@@ -130,21 +129,14 @@ function PrintProduce() {
                 this.sentTo = value;
             }
 
-
-
-
-                
-
-
-            timeDif(oldDate) {
-                var newDate = new Date();
-                var diffInSeconds = (newDate.getTime() - oldDate.getTime()) / 1000;
-                var diffInHours = diffInSeconds / (60 * 60);
-                var diffDaysTmp = diffInHours / 24;
-                var diffDays = Math.floor(diffDaysTmp);
-                var remainingHours = Math.floor(diffInHours % 24);
-
-                return `${diffDays} days, ${remainingHours} hours ago`;
+            get getSownAge() {
+                return timeDif(this.sown);
+            }
+            get getUnderLightAge() {
+                return timeDif(this.underLight);
+            }
+            get getHarvestedAge() {
+                return timeDif(this.harvested);
             }
 
             addToTable() {
@@ -162,49 +154,53 @@ function PrintProduce() {
                 }
 
                 var htmlCode = `
-            <tr id="row${rowCount}">
+            <tr id="row${this.id}" class="row-identifier">
                 <td>${this.shelf}</td>
                 <td>${this.tray}</td>
                 <td>${this.lot}</td>
                 <td>${this.type}</td>
                 <td>
-                    <select class="status" onchange="Lot.typeChange(this.value, ${rowCount})">
+                    <select class="status" onchange="Lot.typeChange(this)">
                         <option ${sownSelected} value="sown">sown</option>
                         <option ${underLightSelected} value="underLight">under light</option>
                         <option ${harvestedSelected} value="harvested">harvested</option>
                     </select>
                 </td>
-                <td>${this.timeDif(this.sown)}</td>
-                <td id="underlight${rowCount}">${this.underLight}</td>
+                <td>${this.getSownAge}</td>
+                <td class="underlight">${this.underLight}</td>
                 <td><input placeholder="${this.partialHarvest}" /></td>
-                <td id="harvested${rowCount}">${this.harvested}</td>
+                <td class="harvested">${this.harvested}</td>
                 <td><input placeholder="${this.weight}" /></td>
                 <td><input placeholder="${this.sentTo}" /></td>
             </tr>`;
                 activeTable.insertAdjacentHTML('beforeend', htmlCode);
-
-                rowCount++;
+                this.DOMobject = document.getElementById("row" + this.id.toString());
             }
 
 
-            static typeChange(value, rowCount) { //TODO: igen, skal nok være noget enum halløj.
+            static typeChange(element) {
+                var value = element.value;
 
                 if (value == "underLight") {
-                    var element = document.getElementById("underlight" + rowCount);
-                    allLots[rowCount].status = "underLight";
-                    allLots[rowCount].sown = new Date();
-                    element.innerHTML = allLots[rowCount].timeDif(allLots[rowCount].sown);
+                    var lotObject = fromDomElementToObject(element);
+                    lotObject.setStatus = "underLight";
+                    lotObject.setUnderLight = new Date();
+
+                    var DOMunderlight = lotObject.fromObjectToDomElement("underlight");
+                    DOMunderlight.innerHTML = lotObject.getSownAge;
                 }
                 else if (value == "harvested") {
                     //flytter rækken ned.
-                    var row = document.getElementById("row" + rowCount);
+                    var row = fromDomElementToObject(element, true);
                     inactiveTable.appendChild(row);
 
                     //opdaterer harvested value. 
-                    var element = document.getElementById("harvested" + rowCount);
-                    allLots[rowCount].status = "harvested";
-                    allLots[rowCount].harvested = new Date();
-                    element.innerHTML = allLots[rowCount].timeDif(allLots[rowCount].harvested);
+                    var lotObject = fromDomElementToObject(element);
+                    lotObject.setStatus = "harvested";
+                    lotObject.setHarvested = new Date();
+
+                    var DOMharvested = lotObject.fromObjectToDomElement("harvested");
+                    DOMharvested.innerHTML = lotObject.getHarvestedAge;
                 }
 
             }
@@ -217,7 +213,7 @@ function PrintProduce() {
                 xmlhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         lotObject.id = this.responseText;
-                        allLots.push(lotObject);
+                        allLots["row" + lotObject.id] = lotObject;
                         lotObject.addToTable();
                     }
                 };
@@ -225,7 +221,11 @@ function PrintProduce() {
                 xmlhttp.send();
             }
 
-            updateDB(url) {
+            updateDB(url, insertAsInt = false) {
+                var isInt = "";
+                if (insertAsInt) {
+                    isInt = "&insertasint=true";
+                }
                 //url eksempel: "searching?lot=" + lotField.value + "&action=" + actionField.value
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
@@ -234,7 +234,67 @@ function PrintProduce() {
                         //TODO: måske lav en eller anden response message der bliver vist?
                     }
                 };
-                xmlhttp.open("GET", url, true);
+                xmlhttp.open("GET", url+""+isInt, true);
                 xmlhttp.send();
             }
+
+            fromObjectToDomElement(classToFind) {
+                var tmp = findFirstChildByClass(this.DOMobject, classToFind);
+                return tmp;
+            }
+}
+
+//inspired from https://stackoverflow.com/a/22119674
+function fromDomElementToObject(el, returnRowInstead = false) {
+    var foundElement = null;
+    while (!el.classList.contains("row-identifier")) {
+        el = el.parentElement;
+        foundElement = el;
+    }
+
+    if (returnRowInstead) {
+        return foundElement;
+    }
+
+    var object = allLots[foundElement.id];
+    return object;
+}
+
+//https://stackoverflow.com/a/25414784
+function findFirstChildByClass(element, className) {
+    var foundElement = null, found;
+    function recurse(element, className, found) {
+        for (var i = 0; i < element.childNodes.length && !found; i++) {
+            var el = element.childNodes[i];
+            var classes = el.className != undefined ? el.className.split(" ") : [];
+            for (var j = 0, jl = classes.length; j < jl; j++) {
+                if (classes[j] == className) {
+                    found = true;
+                    foundElement = element.childNodes[i];
+                    break;
+                }
+            }
+            if (found)
+                break;
+            recurse(element.childNodes[i], className, found);
         }
+    }
+    recurse(element, className, false);
+    return foundElement;
+}
+
+function timeDif(oldDate) {
+    var newDate = new Date();
+    var diffInSeconds = (newDate.getTime() - oldDate.getTime()) / 1000;
+    var diffInHours = diffInSeconds / (60 * 60);
+    var diffDaysTmp = diffInHours / 24;
+    var diffDays = Math.floor(diffDaysTmp);
+    var remainingHours = Math.floor(diffInHours % 24);
+
+    return `${diffDays} days, ${remainingHours} hours ago`;
+}
+
+function parseISOString(s) {
+    var b = s.split(/\D+/);
+    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+}
