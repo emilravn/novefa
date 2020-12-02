@@ -189,7 +189,14 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 <td><input placeholder="${this.weight}" /></td>
                 <td><input placeholder="${this.sentTo}" /></td>
             </tr>`;
-                activeTable.insertAdjacentHTML('beforeend', htmlCode);
+
+                if (this.status == "harvested") {
+                    inactiveTable.insertAdjacentHTML('beforeend', htmlCode);
+                }
+                else {
+                    activeTable.insertAdjacentHTML('beforeend', htmlCode);
+                }
+                
                 this.DOMobject = document.getElementById("row" + this.id.toString());
             }
 

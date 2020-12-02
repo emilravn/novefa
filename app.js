@@ -23,7 +23,6 @@ router.get('/anotherpage', function(req,res){
 });
 
 router.get('/admin-panel/', function (req, res) {
-    var name = 'hello';
 
     var query = `select * from lots;`;
 
@@ -63,10 +62,6 @@ function handleSql(query, responseAction = "", callback) {
         if (err) throw err;
 
         if (responseAction == "return id") {
-            //Object.keys(result).forEach(function (key) { //disse linjer skal måske bruges når alle lots til hentes. 
-            //console.log(result[key].id);
-            //response += result[key].id.toString();
-            //});
             return callback(result[0].id);
         }
         else if (responseAction == "return lots") {
