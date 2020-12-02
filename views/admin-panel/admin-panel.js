@@ -45,7 +45,8 @@ function PrintProduce() {
 // Table code (thomas)
    var activeTable = document.getElementById("activeLotsTable");
    var inactiveTable = document.getElementById("inactiveLotsTable");
-   var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objectet.
+var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objectet.
+
 
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
@@ -64,7 +65,6 @@ function PrintProduce() {
                 this.weight = weight;
                 this.sentTo = sentTo;
                 
-
                 if (newLot) {
                     this.getIdAndInsert(this);
                 }
@@ -78,6 +78,22 @@ function PrintProduce() {
                 var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
                 var sownTime = new Date();
                 return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, null, null, null, null, true);
+            }
+
+            static importDbLots(jsonString) { //bliver kun kaldt fra html?
+                var correctjsonString = jsonString.replace(/&#34;/g, '"');
+                var arrayOfObjects = JSON.parse(correctjsonString);
+
+                for (var i = 0; i < arrayOfObjects.length; i++) {
+                    var obj = arrayOfObjects[i];
+                    var sown = parseISOString(obj.sown);
+                    var underlight = parseISOString(obj.underlight);
+                    var harvested = parseISOString(obj.harvested); 
+                    var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
+
+                    allLots[newLot.id] = newLot; 
+                }
+
             }
 
             //setter and getters: bør de også opdatere dom?
@@ -167,9 +183,9 @@ function PrintProduce() {
                     </select>
                 </td>
                 <td>${this.getSownAge}</td>
-                <td class="underlight">${this.underLight}</td>
+                <td class="underlight">${this.getUnderLightAge}</td>
                 <td><input placeholder="${this.partialHarvest}" /></td>
-                <td class="harvested">${this.harvested}</td>
+                <td class="harvested">${this.getHarvestedAge}</td>
                 <td><input placeholder="${this.weight}" /></td>
                 <td><input placeholder="${this.sentTo}" /></td>
             </tr>`;
@@ -284,17 +300,29 @@ function findFirstChildByClass(element, className) {
 }
 
 function timeDif(oldDate) {
-    var newDate = new Date();
-    var diffInSeconds = (newDate.getTime() - oldDate.getTime()) / 1000;
-    var diffInHours = diffInSeconds / (60 * 60);
-    var diffDaysTmp = diffInHours / 24;
-    var diffDays = Math.floor(diffDaysTmp);
-    var remainingHours = Math.floor(diffInHours % 24);
+    try {
+        var newDate = new Date();
+        var diffInSeconds = (newDate.getTime() - oldDate.getTime()) / 1000;
+        var diffInHours = diffInSeconds / (60 * 60);
+        var diffDaysTmp = diffInHours / 24;
+        var diffDays = Math.floor(diffDaysTmp);
+        var remainingHours = Math.floor(diffInHours % 24);
 
-    return `${diffDays} days, ${remainingHours} hours ago`;
+        return `${diffDays} days, ${remainingHours} hours ago`;
+    }
+    catch (err) {
+        return "";
+    }
+    
 }
 
 function parseISOString(s) {
-    var b = s.split(/\D+/);
-    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+    try {
+        var b = s.split(/\D+/);
+        return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+    }
+    catch (err) { //hvis det ikke er en dato. (e.g. hvis den er null)
+        return null;
+    }
+    
 }

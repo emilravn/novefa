@@ -6,6 +6,9 @@ const router = express.Router();
 const path = __dirname + '/views/';
 const port = 8080;
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
 router.use(function (req,res,next) {
     console.log('/' + req.method);
     next();
@@ -17,7 +20,19 @@ router.get('/', function(req,res){
   
 router.get('/anotherpage', function(req,res){
     res.sendFile(path + 'anotherpage.html');
-  });
+});
+
+router.get('/admin-panel/', function (req, res) {
+    var name = 'hello';
+
+    var query = `select * from lots;`;
+
+    handleSql(query, "return lots", function (allLots) {
+        var string = JSON.stringify(allLots);
+        res.render(path + 'admin-panel/admin-panel.html', { allLots: string });
+    });
+
+});
 
   router.get('/scan/scan', function(req,res){
     res.sendFile(path + 'scan.html');
@@ -49,16 +64,19 @@ function handleSql(query, responseAction = "", callback) {
 
         if (responseAction == "return id") {
             //Object.keys(result).forEach(function (key) { //disse linjer skal måske bruges når alle lots til hentes. 
-                //console.log(result[key].id);
-                //response += result[key].id.toString();
+            //console.log(result[key].id);
+            //response += result[key].id.toString();
             //});
             return callback(result[0].id);
-            
+        }
+        else if (responseAction == "return lots") {
+            callback(result);
         }
             
     });
     con.end();
 };
+
 
 app.get('/admin-panel/getNewestId', function (req, res) {
 
