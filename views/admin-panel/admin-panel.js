@@ -147,13 +147,23 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             }
 
             get getSownAge() {
+                if (this.status == "harvested")
+                {
+                    return timeDif(this.sown, this.harvested)
+                }
                 return timeDif(this.sown);
             }
             get getUnderLightAge() {
+                if (this.status == "harvested") {
+                    return timeDif(this.underLight, this.harvested)
+                }
                 return timeDif(this.underLight);
             }
             get getHarvestedAge() {
-                return timeDif(this.harvested);
+                if (this.status == "harvested") {
+                    return dateStringDanish(this.harvested); //her er det jo bare datoen der skal returneres.
+                }
+                return "";
             }
 
             addToTable() {
@@ -307,16 +317,16 @@ function findFirstChildByClass(element, className) {
     return foundElement;
 }
 
-function timeDif(oldDate) {
+function timeDif(oldDate, compareDate = new Date()) {
     try {
-        var newDate = new Date();
-        var diffInSeconds = (newDate.getTime() - oldDate.getTime()) / 1000;
+        //var newDate = new Date();
+        var diffInSeconds = (compareDate.getTime() - oldDate.getTime()) / 1000;
         var diffInHours = diffInSeconds / (60 * 60);
         var diffDaysTmp = diffInHours / 24;
         var diffDays = Math.floor(diffDaysTmp);
         var remainingHours = Math.floor(diffInHours % 24);
 
-        return `${diffDays} days, ${remainingHours} hours ago`;
+        return `${diffDays} days, ${remainingHours} hours`;
     }
     catch (err) {
         return "";
@@ -331,6 +341,21 @@ function parseISOString(s) {
     }
     catch (err) { //hvis det ikke er en dato. (e.g. hvis den er null)
         return null;
+    }   
+}
+
+function dateStringDanish(date) {
+    if (date == null) {
+        return "N/A";
     }
-    
+
+    var d = new Date(date);
+    const danishMonths = ["Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"];
+    var day = d.getDay();
+    var month = d.getMonth();
+    var numericDay = d.getDate();
+    var year = d.getFullYear();
+
+    var dateString = numericDay + ". " + danishMonths[month] + ", " + year;
+    return dateString;
 }
