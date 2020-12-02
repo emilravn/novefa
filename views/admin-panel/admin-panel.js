@@ -91,8 +91,9 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     var harvested = parseISOString(obj.harvested); 
                     var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
 
-                    allLots[newLot.id] = newLot; 
+                    allLots["row" + newLot.id] = newLot; 
                 }
+
 
             }
 
