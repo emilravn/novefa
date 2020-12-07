@@ -62,7 +62,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 this.sown = sown;
                 this.underLight = underLight;
 
-                //partialharvest skal være et array af objecter med gram: xx, date: xx
+                //partialharvest skal være et array af objecter med gram: xx, date: xx    (samme for sentto)
                 if (partialHarvest == "") {
                     this.partialHarvest = [];
                 }
@@ -73,7 +73,14 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
 
                 this.harvested = harvested;
                 this.weight = weight;
-                this.sentTo = sentTo;
+
+                if (sentTo == "") {
+                    this.sentTo = [];
+                }
+                else {
+                    var tmp2 = sentTo.replace(/'/g, '"');
+                    this.sentTo = JSON.parse(tmp2);
+                }
                 
                 if (newLot) {
                     this.getIdAndInsert(this);
@@ -88,7 +95,8 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
                 var sownTime = new Date();
                 var emptyArray = "[]";
-                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, emptyArray, null, null, null, true);
+                var emptyArray2 = "[]";
+                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, emptyArray, null, null, emptyArray2, true);
             }
 
             static importDbLots(jsonString) { //bliver kun kaldt fra html?
@@ -162,8 +170,16 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 this.weight = value;
             }
             set setSentTo(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=sentTo`);
-                this.sentTo = value;
+                var oldValue = this.getSentToValue;
+                var newValue = value.replace(oldValue, "");
+                var newValue2 = newValue.replace(",", "");
+                var date = ddmmyyyy(new Date());
+                var newObject = { "kunde": newValue2, "date": date };
+                this.sentTo.push(newObject);
+                var json = JSON.stringify(this.sentTo);
+                var correctjson = json.replace(/"/g, "''");
+
+                this.updateDB(`updateLot?id=${this.id}&value=${correctjson}&attribute=sentTo`);
             }
 
             get getSownAge() {
@@ -208,6 +224,28 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 return string;
             }
 
+            get getSentToToolTip() {
+                var string = "";
+
+                for (var i = 0; i < this.sentTo.length; i++) {
+                    string += `${this.sentTo[i]["date"]}: ${this.sentTo[i]["kunde"]} <br>`;
+                }
+                return string;
+            }
+
+            get getSentToValue() {
+                var string = "";
+
+                for (var i = 0; i < this.sentTo.length; i++) {
+                    string += `${this.sentTo[i]["kunde"]},`;
+                }
+
+                if (this.sentTo.length > 0) {
+                    string = string.slice(0, -1);
+                }
+                return string;
+            }
+
             addToTable() {
                 var sownSelected = "";
                 var underLightSelected = "";
@@ -242,7 +280,9 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 </td>
                 <td class="harvested">${this.getHarvestedAge}</td>
                 <td><input placeholder="${this.weight}" /></td>
-                <td><input placeholder="${this.sentTo}" /></td>
+                <td class="tooltip"><input value="${this.getSentToValue}" onchange="Lot.sentToChange(this)"/>
+                    <span class="tooltiptext">${this.getSentToToolTip}</span>
+                </td>
             </tr>`;
 
                 if (this.status == "harvested") {
@@ -285,6 +325,10 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             static partialHarvestChange(element) {
                 var lotObject = fromDomElementToObject(element);
                 lotObject.setPartialHarvest = element.value;
+            }
+            static sentToChange(element) {
+                var lotObject = fromDomElementToObject(element);
+                lotObject.setSentTo = element.value;
             }
 
             getIdAndInsert(lotObject) {
