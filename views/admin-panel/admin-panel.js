@@ -464,3 +464,19 @@ function ddmmyyyy(date) {
     var string = dd + '/' + mm + '/' + yyyy;
     return string;
 }
+
+function download_csv() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var csv = this.responseText;
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = 'lotData.csv';
+            hiddenElement.click();
+        }
+    };
+    xmlhttp.open("GET", "/admin-panel/export", true);
+    xmlhttp.send();
+}

@@ -93,6 +93,70 @@ app.get('/admin-panel/getNewestId', function (req, res) {
 });
 
 
+app.get('/admin-panel/export', function (req, res) {
+
+    var query = `select * from lots order by id;`;
+
+    handleSql(query, "return lots", function (result) {
+        var jsonString = JSON.stringify(result);
+        var correctjsonStringTMP = jsonString.replace(/&#34;/g, '"');
+        var correctjsonString = correctjsonStringTMP.replace(/&#39;/g, "'");
+        var arrayOfObjects = JSON.parse(correctjsonString);
+
+        var returnString = "shelf, tray, lot number, type, status, lot sown, lot under light, partial harvested gram, partial harvested date, lot harvested, weight, sent to\n";
+
+        for (var i = 0; i < arrayOfObjects.length; i++) {
+            var obj = arrayOfObjects[i];
+            var sown = obj.sown.split("T")[0];
+            var underlight = obj.underlight.split("T")[0];
+            var harvested = obj.harvested.split("T")[0];
+
+            //find partialHarvest og de tilhørende sentto
+            var partialHarvest;
+            if (obj.partialHarvest == "") {
+                partialHarvest = [];
+            }
+            else {
+                var tmp = obj.partialHarvest.replace(/'/g, '"');
+                partialHarvest = JSON.parse(tmp);
+            }
+
+            var sentTo;
+            if (obj.sentTo == "") {
+                sentTo = [];
+            }
+            else {
+                var tmp = obj.sentTo.replace(/'/g, '"');
+                sentTo = JSON.parse(tmp);
+            }
+
+            var sentToStringTMP = "";
+            for (var k = 0; k < sentTo.length; k++) {
+                sentToStringTMP += sentTo[k]["kunde"] + " - ";
+            }
+            var sentToString = sentToStringTMP.slice(0, -2);
+
+            
+            //loop gennem partialharvest og så add to return string. Men kun hvis den ikke er tom selvfølgelig.
+            if (partialHarvest.length != 0) {
+                for (var j = 0; j < partialHarvest.length; j++) {
+                    var correctPartialHarvestDate = yyyymmdd(partialHarvest[j]["date"]);
+                    returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.status}, ${sown}, ${underlight}, ${partialHarvest[j]["gram"]}, ${correctPartialHarvestDate}, ${harvested}, ${obj.weight}, ${sentToString}\n`;
+                }
+            }
+            else {
+                //bare går det på en normal måde, så det kun bliver en enkelt linje. 
+                returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.status}, ${sown}, ${underlight}, , , ${harvested}, ${obj.weight}, ${sentToString}\n`;
+            }
+
+            // //var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
+        }
+        res.send(returnString);
+    });
+
+});
+
+
 app.get('/admin-panel/newLot', function (req, res) {
     var values = req.query.values;
 
@@ -143,3 +207,14 @@ app.get('/searching', function (req, res) {
     res.send("WHEEE (response text)");
     //con.end();
 });
+
+function yyyymmdd(oldDate) {
+    try {
+        var tmp = oldDate.split("/");
+        return `${tmp[2]}-${tmp[1]}-${tmp[0]}`;
+    }
+    catch (err) {
+        return "";
+    }
+    
+}
