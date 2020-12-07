@@ -24,7 +24,16 @@ router.get('/anotherpage', function(req,res){
 
 router.get('/admin-panel/', function (req, res) {
 
-    var query = `select * from lots;`;
+    var query = "";
+    var showall = req.query.showall;
+
+    if (showall == "true/") {
+        query = `select * from lots;`;
+    }
+    else {
+        query = `select * from lots limit 50;`;
+    }
+
 
     handleSql(query, "return lots", function (allLots) {
         var string = JSON.stringify(allLots);
