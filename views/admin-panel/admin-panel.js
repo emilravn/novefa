@@ -279,7 +279,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     <span class="tooltiptext">${this.getPartialHarvestToolTip}</span>
                 </td>
                 <td class="harvested">${this.getHarvestedAge}</td>
-                <td><input placeholder="${this.weight}" /></td>
+                <td><input value="${this.weight}" onchange="Lot.weightChange(this)"/></td>
                 <td class="tooltip"><input value="${this.getSentToValue}" onchange="Lot.sentToChange(this)"/>
                     <span class="tooltiptext">${this.getSentToToolTip}</span>
                 </td>
@@ -329,6 +329,10 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             static sentToChange(element) {
                 var lotObject = fromDomElementToObject(element);
                 lotObject.setSentTo = element.value;
+            }
+            static weightChange(element) {
+                var lotObject = fromDomElementToObject(element);
+                lotObject.setWeight = element.value;
             }
 
             getIdAndInsert(lotObject) {
