@@ -48,6 +48,7 @@ function PrintProduce() {
 var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objectet.
 
 
+
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
             constructor(id, shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
@@ -60,7 +61,8 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 this.status = status;
                 this.sown = sown;
                 this.underLight = underLight;
-                this.partialHarvest = partialHarvest;
+                //skal være et array af objecter med gram: xx, date: xx
+                this.partialHarvest = partialHarvest;  //før this.partialHarvest = partialHarvest;
                 this.harvested = harvested;
                 this.weight = weight;
                 this.sentTo = sentTo;
@@ -195,7 +197,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 </td>
                 <td>${this.getSownAge}</td>
                 <td class="underlight">${this.getUnderLightAge}</td>
-                <td><input placeholder="${this.partialHarvest}" /></td>
+                <td><input placeholder="${this.partialHarvest}" onchange="Lot.partialHarvestChange(this)"/></td>
                 <td class="harvested">${this.getHarvestedAge}</td>
                 <td><input placeholder="${this.weight}" /></td>
                 <td><input placeholder="${this.sentTo}" /></td>
@@ -236,7 +238,10 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     var DOMharvested = lotObject.fromObjectToDomElement("harvested");
                     DOMharvested.innerHTML = lotObject.getHarvestedAge;
                 }
+            }
 
+            static partialHarvestChange(element) {
+                console.log(element.value);
             }
 
             getIdAndInsert(lotObject) {
