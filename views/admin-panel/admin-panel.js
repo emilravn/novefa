@@ -61,8 +61,16 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 this.status = status;
                 this.sown = sown;
                 this.underLight = underLight;
-                //skal være et array af objecter med gram: xx, date: xx
-                this.partialHarvest = partialHarvest;  //før this.partialHarvest = partialHarvest;
+
+                //partialharvest skal være et array af objecter med gram: xx, date: xx
+                if (partialHarvest == "") {
+                    this.partialHarvest = [];
+                }
+                else {
+                    var tmp = partialHarvest.replace(/'/g, '"');
+                    this.partialHarvest = JSON.parse(tmp);//JSON.parse('[ {"gram":"200", "date":"12-12-2020"}, {"gram":"400", "date":"14-12-2020"} ]');
+                }
+
                 this.harvested = harvested;
                 this.weight = weight;
                 this.sentTo = sentTo;
@@ -79,18 +87,20 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             static createNewLot(tray, type) {
                 var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
                 var sownTime = new Date();
-                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, null, null, null, null, true);
+                var emptyArray = "[]";
+                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, emptyArray, null, null, null, true);
             }
 
             static importDbLots(jsonString) { //bliver kun kaldt fra html?
-                var correctjsonString = jsonString.replace(/&#34;/g, '"');
+                var correctjsonStringTMP = jsonString.replace(/&#34;/g, '"');
+                var correctjsonString = correctjsonStringTMP.replace(/&#39;/g, "'");
                 var arrayOfObjects = JSON.parse(correctjsonString);
 
                 for (var i = 0; i < arrayOfObjects.length; i++) {
                     var obj = arrayOfObjects[i];
                     var sown = parseISOString(obj.sown);
                     var underlight = parseISOString(obj.underlight);
-                    var harvested = parseISOString(obj.harvested); 
+                    var harvested = parseISOString(obj.harvested);
                     var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
 
                     allLots["row" + newLot.id] = newLot; 
@@ -131,8 +141,16 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 this.underLight = value;
             }
             set setPartialHarvest(value) {
-                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=partialHarvest`);
-                this.partialHarvest = value;
+                var oldValue = this.getPartialharvestValue;
+                var newValue = value.replace(oldValue, "");
+                var newValue2 = newValue.replace(",", "");
+                var date = ddmmyyyy(new Date());
+                var newObject = { "gram": newValue2, "date": date };
+                this.partialHarvest.push(newObject);
+                var json = JSON.stringify(this.partialHarvest);
+                var correctjson = json.replace(/"/g, "''");
+
+                this.updateDB(`updateLot?id=${this.id}&value=${correctjson}&attribute=partialHarvest`);
             }
             set setHarvested(value) {
                 var ISOvalue = value.toISOString();
@@ -168,6 +186,28 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 return "";
             }
 
+            get getPartialHarvestToolTip() {
+                var string = "";
+
+                for (var i = 0; i < this.partialHarvest.length; i++) {
+                    string += `${this.partialHarvest[i]["date"]}: ${this.partialHarvest[i]["gram"]}g <br>`;
+                }
+                return string;
+            }
+
+            get getPartialharvestValue() {
+                var string = "";
+
+                for (var i = 0; i < this.partialHarvest.length; i++) {
+                    string += `${this.partialHarvest[i]["gram"]},`;
+                }
+
+                if (this.partialHarvest.length > 0) {
+                    string = string.slice(0, -1);
+                }
+                return string;
+            }
+
             addToTable() {
                 var sownSelected = "";
                 var underLightSelected = "";
@@ -197,7 +237,9 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 </td>
                 <td>${this.getSownAge}</td>
                 <td class="underlight">${this.getUnderLightAge}</td>
-                <td><input placeholder="${this.partialHarvest}" onchange="Lot.partialHarvestChange(this)"/></td>
+                <td class="tooltip"><input value="${this.getPartialharvestValue}" onchange="Lot.partialHarvestChange(this)"/>
+                    <span class="tooltiptext">${this.getPartialHarvestToolTip}</span>
+                </td>
                 <td class="harvested">${this.getHarvestedAge}</td>
                 <td><input placeholder="${this.weight}" /></td>
                 <td><input placeholder="${this.sentTo}" /></td>
@@ -241,7 +283,8 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             }
 
             static partialHarvestChange(element) {
-                console.log(element.value);
+                var lotObject = fromDomElementToObject(element);
+                lotObject.setPartialHarvest = element.value;
             }
 
             getIdAndInsert(lotObject) {
@@ -363,4 +406,13 @@ function dateStringDanish(date) {
 
     var dateString = numericDay + ". " + danishMonths[month] + ", " + year;
     return dateString;
+}
+
+function ddmmyyyy(date) {
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+
+    var string = dd + '/' + mm + '/' + yyyy;
+    return string;
 }
