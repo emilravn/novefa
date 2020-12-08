@@ -1,9 +1,13 @@
-// remember to set printer as default to not, get a pop-up asking to print on chrome browser
+// Navigate to 'Program Files (x86)\Google\Chrome\Application'
+//run 'chrome.exe --kiosk --kiosk-printing localhost:8080' in cmd
+// Set default page as the application or navigate to it via google (CTRL-T = New tab)
 
 // Hold the current count on amount of shelfs, trays, produce etc. (should be imported from database).
+// Eg. select *from shelfs ORDER BY id DESC LIMIT 1; (then +1 for new barcode)
 var ShelfCount = 3;
 var TrayCount = 3;
 var ProduceCount = 2;
+var LotCount = 2;
 
 // Adds leading zeros and gives the barcode a predetermined length
 function pad(number, length) {
@@ -16,28 +20,50 @@ function pad(number, length) {
 
 function PrintProduce() {
     ProduceCount++; // Make Barcode one larger than the previous
-    var ProduceBarcode = "F" + pad(ProduceCount,9).toString(); // add prefix as well as leading 0's
+    var ProduceBarcode = "F" + pad(ProduceCount, 9).toString(); // add prefix as well as leading 0's
     JsBarcode("#code128", ProduceBarcode); // Input the barcode into barcode.js, using the format Code128.
-  }
+    printDivInPopUp() // Prints the div in new window to get correct output
+}
 
-  function PrintShelf() {
-    ShelfCount++; 
-    var ShelfBarcode = "S" + pad(ShelfCount,9).toString(); 
+function newLot() {
+    LotCount++;
+    var string = pad(LotCount, 9).toString();
+    return string;
+}
+
+function PrintShelf() {
+    ShelfCount++;
+    var ShelfBarcode = "S" + pad(ShelfCount, 9).toString();
     JsBarcode("#code128", ShelfBarcode);
-  }
+    printDivInPopUp();
+}
 
-  function PrintTray() {
+function PrintTray() {
     TrayCount++;
-    var TrayBarcode = "T" + pad(TrayCount,9).toString(); 
+    var TrayBarcode = "T" + pad(TrayCount, 9).toString();
     JsBarcode("#code128", TrayBarcode);
-  }
+    printDivInPopUp();
+}
 
   // Take input from textfield and make it into a barcode
-  function ManualBarcodeEntry(){
+function ManualBarcodeEntry() {
     var text = document.getElementById("txt_input").value;
-    JsBarcode("#code128", text);   
-  }
+    JsBarcode("#code128", text);
+    printDivInPopUp();
+}
 
+// Open barcode in new window, so it's the only element to print
+function printDivInPopUp() {
+    var divToPrint = document.getElementById('code128');
+    var newWindow = window.open('', 'Print-Window');
+    newWindow.document.open();
+    newWindow.document.write('<link rel="stylesheet" type="text/css" href="admin-panel.css" />');
+    newWindow.document.write('<html><body onload="window.print()">' + divToPrint.outerHTML + '</body></html>');
+    newWindow.document.close();
+    setTimeout(function () { newWindow.close(); }, 10);
+}
+
+// Removed if modal is not used
   function DisplayPrintModal() {
     document.getElementById("Modal").showModal();
 }

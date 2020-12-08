@@ -8,6 +8,20 @@
 </head>
 
 <body>
+
+    <!-- Remember to insert link to scan page-->
+    <!--Print Options -->
+    <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>
+    <button id="PrintTray" onclick="PrintTray();">New Tray</button>
+    <button id="PrintShelf" onclick="PrintShelf();">New Shelf</button>
+    <!-- Manual print option-->
+    <input type="text" name="txt_input" id="txt_input">
+    <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
+    <!-- Container for the barcode-->
+    <svg id="code128" display="none" ;></svg>
+    <!-- Temprorary spacing-->
+    <br><br>
+
     <table id="activeLotsTable">
         <tr>
             <th>Shelf number</th>
@@ -43,30 +57,8 @@
         </tr>
     </table>
 
-
-    <!-- Modal-open button-->
-    <button onclick="DisplayPrintModal()">Print Options</button>
-
-    <!--Modal TODO: add close on close button, and clicking outside the modal
-        remember to set printer as default to not, get a pop-up asking to print on chrome browser
-    -->
-    <dialog id="Modal">
-
-        <!--Print buttons-->
-        <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>
-        <button id="PrintTray" onclick="PrintTray();">New Tray</button>
-        <button id="PrintShelf" onclick="PrintShelf();">New Shelf</button>
-
-        <!-- Let user manually create a barcode-->
-        <input type="text" name="txt_input" id="txt_input">
-        <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
-
-        <!-- Container for the barcode-->
-        <svg id="code128"></svg>
-
-    </dialog>
-
     <!-- Import custom javascript-->
+    <script> //fra databasen.</script>
     <script src="admin-panel.js"></script>
     <script>Lot.importDbLots('<%= allLots %>');</script>
     <!--Include barcode.js plugin to generate barcodes-->

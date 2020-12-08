@@ -6,23 +6,86 @@ const router = express.Router();
 const path = __dirname + '/views/';
 const port = 8080;
 
+var mysql = require('mysql');
+var session = require('express-session');
+var bodyParser = require('body-parser');
+
+// Template engine
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+// Specify static root directory
+app.use(express.static(path));
+
+// Mount router as middleware
+app.use('/', router);
+
+// Used to extract data from the login form
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Sets up secret code for sessions, to determine if user is logged in
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+// Connection for login (not con) <-- Does this need to be in  a method??
+var connection = mysql.createConnection({
+    host: "mysql78.unoeuro.com",
+    user: "multicrypt_io",
+    password: "D2gnzGrdcamy",
+    database: "multicrypt_io_db"
+});
+
+// Print message in console at bootup
+app.listen(port, function () {
+    console.log(`I\'m listening for you on port ${port}!`)
+});
+
+
+// Print request method in the console
 router.use(function (req,res,next) {
     console.log('/' + req.method);
     next();
-  });
-  
-router.get('/', function(req,res){
-    res.sendFile(path + 'index.html');
-  });
-  
-router.get('/anotherpage', function(req,res){
-    res.sendFile(path + 'anotherpage.html');
 });
 
-router.get('/admin-panel/', function (req, res) {
+  
+// Display login form on opening
+app.get('/', function (req, res) {
+    res.sendFile(path + '/login/login.html');
+});
+
+
+// User authentication from form
+app.post('/login', function (req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+    if (username && password) {
+        // check if user exists
+        connection.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+            if (results.length > 0) {
+                req.session.loggedin = true;
+                req.session.username = username;
+                res.redirect('../admin-panel/');
+            } else {
+                res.send('Incorrect Username and/or Password!');
+
+            }
+            res.end();
+        });
+    } else {
+        res.send('Please enter Username and Password!');
+        res.end();
+    }
+});
+
+
+
+// admin-panel route
+app.get('/admin-panel/', function (req, res) {
+    if (req.session.loggedin) {
 
     var query = "";
     var showall = req.query.showall;
@@ -35,26 +98,28 @@ router.get('/admin-panel/', function (req, res) {
     }
 
 
-    handleSql(query, "return lots", function (allLots) {
+        handleSql(query, "return lots", function (allLots) {
         var string = JSON.stringify(allLots);
         res.render(path + 'admin-panel/admin-panel.html', { allLots: string });
-    });
+    }); 
+    } else {
+        res.send('Please login to view this page!');
+    }
 
 });
 
-  router.get('/scan/scan', function(req,res){
-    res.sendFile(path + 'scan.html');
+// Scan route
+app.get('/scan', function (req, res) {
+    if (req.session.loggedin) {
+        res.sendFile(path + 'scan/scan.html');
+    } else {
+        res.send('Please login to view this page!');
+    }
   });
 
-app.use(express.static(path));
-app.use('/', router);
-
-app.listen(port, function () {
-    console.log(`I\'m listening for you on port ${port}!`)
-});
 
 
-var mysql = require('mysql');
+
 
 function handleSql(query, responseAction = "", callback) {
 

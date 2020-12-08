@@ -17,7 +17,7 @@ function sendData() {
 
 
 document.body.addEventListener('keyup', function (e) {
-    if (e.keyCode == 13) { //dvs. enter knappen.
+    if (e.keyCode == 13) { //enter key
 
         if (!formReady) {
             formReady = true;

@@ -14,9 +14,11 @@ tr:nth-child(even) {
     background-color: #dddddd;
 }
 
-#PrintShelf{
+/* Udkokumenteret for nu, tror ikke den gør noget
+#PrintShelf {
     display: block;
 }
+*/
 
 /* Tooltip container */
 .tooltip {
@@ -44,3 +46,25 @@ tr:nth-child(even) {
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+
+/* Use this specific styling when printing to label-printer */
+@media print {
+    body, html, #code128 {
+        margin: 0px !important;
+        padding: 0px !important;
+        border: 0px;
+    }
+
+    #code128 {
+        display: inline;
+        position: absolute;
+        left: 25%;
+        width: 180px; /* dependendt on label size */
+        height: auto;
+    }
+
+    @page {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+}
