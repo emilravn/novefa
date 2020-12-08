@@ -157,6 +157,25 @@ app.get('/admin-panel/getNewestId', function (req, res) {
     
 });
 
+app.get('/admin-panel/getCounts', function (req, res) {
+
+    var query = `select * from counter;`;
+
+    handleSql(query, "return lots", function (result) {
+        res.send(result);
+    });
+});
+
+app.get('/admin-panel/updateCounts', function (req, res) {
+    var type = req.query.type;
+    var count = req.query.count;
+
+    var query = `UPDATE counter SET count = ${count} WHERE type = '${type}';`;
+
+    handleSql(query, "return lots", function (result) {
+    });
+});
+
 
 app.get('/admin-panel/export', function (req, res) {
 

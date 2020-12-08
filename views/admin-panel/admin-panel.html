@@ -58,9 +58,10 @@
     </table>
 
     <!-- Import custom javascript-->
-    <script> //fra databasen.</script>
+    <script>//fra databasen.</script>
     <script src="admin-panel.js"></script>
     <script>Lot.importDbLots('<%= allLots %>');</script>
+    <script>importCounts();</script>
     <!--Include barcode.js plugin to generate barcodes-->
     <script src="../plugins/JsBarcode.all.min.js"></script>
 

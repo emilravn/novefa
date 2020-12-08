@@ -4,10 +4,10 @@
 
 // Hold the current count on amount of shelfs, trays, produce etc. (should be imported from database).
 // Eg. select *from shelfs ORDER BY id DESC LIMIT 1; (then +1 for new barcode)
-var ShelfCount = 3;
-var TrayCount = 3;
-var ProduceCount = 2;
-var LotCount = 2;
+var ShelfCount = 0;
+var TrayCount = 0;
+var ProduceCount = 0;
+var LotCount = 0;
 
 // Adds leading zeros and gives the barcode a predetermined length
 function pad(number, length) {
@@ -23,11 +23,13 @@ function PrintProduce() {
     var ProduceBarcode = "F" + pad(ProduceCount, 9).toString(); // add prefix as well as leading 0's
     JsBarcode("#code128", ProduceBarcode); // Input the barcode into barcode.js, using the format Code128.
     printDivInPopUp() // Prints the div in new window to get correct output
+    updateCounts("seeds", ProduceCount);
 }
 
 function newLot() {
     LotCount++;
     var string = pad(LotCount, 9).toString();
+    updateCounts("lots", LotCount);
     return string;
 }
 
@@ -36,6 +38,7 @@ function PrintShelf() {
     var ShelfBarcode = "S" + pad(ShelfCount, 9).toString();
     JsBarcode("#code128", ShelfBarcode);
     printDivInPopUp();
+    updateCounts("shelf", ShelfCount);
 }
 
 function PrintTray() {
@@ -43,6 +46,7 @@ function PrintTray() {
     var TrayBarcode = "T" + pad(TrayCount, 9).toString();
     JsBarcode("#code128", TrayBarcode);
     printDivInPopUp();
+    updateCounts("tray", TrayCount);
 }
 
   // Take input from textfield and make it into a barcode
@@ -504,5 +508,35 @@ function download_csv() {
         }
     };
     xmlhttp.open("GET", "/admin-panel/export", true);
+    xmlhttp.send();
+}
+
+function importCounts() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var result = JSON.parse(this.response);
+            ShelfCount = result[0].count;
+            TrayCount = result[1].count;
+            ProduceCount = result[2].count;
+            LotCount = result[3].count;
+        }
+    };
+    xmlhttp.open("GET", "/admin-panel/getCounts", true);
+    xmlhttp.send();
+}
+
+function updateCounts(type, count) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var result = JSON.parse(this.response);
+            ShelfCount = result[0].count;
+            TrayCount = result[1].count;
+            ProduceCount = result[2].count;
+            LotCount = result[3].count;
+        }
+    };
+    xmlhttp.open("GET", `/admin-panel/updateCounts?type=${type}&count=${count}`, true);
     xmlhttp.send();
 }
