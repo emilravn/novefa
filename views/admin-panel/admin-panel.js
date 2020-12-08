@@ -122,14 +122,14 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
 
             //bruges når der skal laves helt nye lots.
             static createNewLot(tray, type) {
-                var lotNumber = "0000001"; //TODO: her skal simons betode kaldes til at oprette nye lot numre.
+                var lotNumber = newLot();
                 var sownTime = new Date();
                 var emptyArray = "[]";
                 var emptyArray2 = "[]";
                 return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, emptyArray, null, null, emptyArray2, true);
             }
 
-            static importDbLots(jsonString) { //bliver kun kaldt fra html?
+            static importDbLots(jsonString) { //bliver kun kaldt fra html
                 var correctjsonStringTMP = jsonString.replace(/&#34;/g, '"');
                 var correctjsonString = correctjsonStringTMP.replace(/&#39;/g, "'");
                 var arrayOfObjects = JSON.parse(correctjsonString);
@@ -147,7 +147,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
 
             }
 
-            //setter and getters: bør de også opdatere dom?
+            //setters and getters
             set setShelf(value) {
                 this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=shelf`, true);
                 this.shelf = value;
