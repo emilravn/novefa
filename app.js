@@ -247,7 +247,7 @@ app.get('/admin-panel/newLot', function (req, res) {
     var valuesArray = values.split("_");
 
     var columns = "`shelf`, `tray`, `lot`, `type`, `status`, `sown`, `underlight`, `partialHarvest`, `harvested`, `weight`, `sentTo`";
-    var valuesStringTmp = `${valuesArray[0]}, ${valuesArray[1]}, ${valuesArray[2]}, '${valuesArray[3]}', '${valuesArray[4]}', '${valuesArray[5]}', '${valuesArray[6]}', '${valuesArray[7]}', '${valuesArray[8]}', ${valuesArray[9]}, '${valuesArray[10]}'`;
+    var valuesStringTmp = `${valuesArray[0]}, ${valuesArray[1]}, '${valuesArray[2]}', '${valuesArray[3]}', '${valuesArray[4]}', '${valuesArray[5]}', '${valuesArray[6]}', '${valuesArray[7]}', '${valuesArray[8]}', ${valuesArray[9]}, '${valuesArray[10]}'`;
     var valuesString = valuesStringTmp.replace(/'null'/g, "null");
 
     var query = `insert into lots (${columns}) values (${valuesString});`;

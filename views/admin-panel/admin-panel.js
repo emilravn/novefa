@@ -28,7 +28,7 @@ function PrintProduce() {
 
 function newLot() {
     LotCount++;
-    var string = pad(LotCount, 9).toString();
+    var string = "L" + pad(LotCount, 9).toString();
     updateCounts("lots", LotCount);
     return string;
 }
