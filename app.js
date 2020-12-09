@@ -261,6 +261,18 @@ app.get('/scan/newLot', function (req, res) {
     res.send("WHEEE (response text)");
 });
 
+app.get('/scan/updateShelf', function (req, res) {
+    var tray = req.query.tray;
+    var shelf = req.query.shelf;
+
+    var query = `UPDATE lots SET shelf = ${shelf} WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`;
+
+    console.log(query);
+
+    handleSql(query);
+    res.send("WHEEE (response text)");
+});
+
 
 app.get('/admin-panel/newLot', function (req, res) { //til indsæt test lot fra admin panel.
     var values = req.query.values;

@@ -30,8 +30,10 @@ function sendDataTEST() {
 
         newLotToDatabase(tray, seed, lot);
     }
-    else if (firstChar == "S") { //set status til shelf.
-        
+    else if (firstChar == "S") { //update shelf.
+        var tray = trimBarcode(trayField.value);
+        var shelf = trimBarcode(actionField.value);
+        updateShelfDatabase(tray, shelf);
     }
 }
 
@@ -43,6 +45,17 @@ function newLotToDatabase(trimmedTray, seed, lot) { //sender tray, lot, og seed 
         }
     };
     xmlhttp.open("GET", `newLot?tray=${trimmedTray}&seed=${seed}&lot=${lot}`, true);
+    xmlhttp.send();
+}
+
+function updateShelfDatabase(trimmedTray, trimmedShelf) { 
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("message2").innerHTML = this.responseText;
+        }
+    };
+    xmlhttp.open("GET", `updateShelf?tray=${trimmedTray}&shelf=${trimmedShelf}`, true);
     xmlhttp.send();
 }
 
