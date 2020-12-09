@@ -9,14 +9,30 @@
 
 <body>
 
-    <!-- Remember to insert link to scan page-->
-    <!--Print Options -->
-    <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>
-    <button id="PrintTray" onclick="PrintTray();">New Tray</button>
-    <button id="PrintShelf" onclick="PrintShelf();">New Shelf</button>
-    <!-- Manual print option-->
-    <input type="text" name="txt_input" id="txt_input">
-    <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn">Print</button>
+    <button onclick="download_csv()">Download CSV</button>
+    <button onclick="location.href='../scan'" type="button">Scan</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <!-- Remember to insert link to scan page-->
+            <!--Print Options -->
+            <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>
+            <button id="PrintTray" onclick="PrintTray();">New Tray</button>
+            <button id="PrintShelf" onclick="PrintShelf();">New Shelf</button>
+            <!-- Manual print option-->
+            <input type="text" name="txt_input" id="txt_input">
+            <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
+        </div>
+
+    </div>
+
+
     <!-- Container for the barcode-->
     <svg id="code128" display="none" ;></svg>
     <!-- Temprorary spacing-->
@@ -38,8 +54,8 @@
         </tr>
     </table>
 
-    <button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>
-    <button onclick="download_csv()">Download CSV</button>
+    <!--<button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>-->
+
 
     <table id="inactiveLotsTable" style="margin-top:300px;">
         <tr>
@@ -64,6 +80,7 @@
     <script>importCounts();</script>
     <!--Include barcode.js plugin to generate barcodes-->
     <script src="../plugins/JsBarcode.all.min.js"></script>
+    <script src="./modal.js"></script>
 
 </body>
 </html>
