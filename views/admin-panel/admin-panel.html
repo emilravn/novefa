@@ -8,11 +8,15 @@
 </head>
 
 <body>
-
-    <!-- Trigger/Open The Modal -->
-    <button id="myBtn">Print</button>
-    <button onclick="download_csv()">Download CSV</button>
-    <button onclick="location.href='../scan'" type="button">Scan</button>
+    <div class="headerContainer">
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <!-- Trigger/Open The Modal -->
+            <button class="headerButton" id="myBtn">Print</button>
+            <button class="headerButton" onclick="download_csv()">export</button>
+            <button class="headerButton" onclick="location.href='../scan'" type="button">Scan</button>
+        </div>
+    </div>
 
     <!-- The Modal -->
     <div id="myModal" class="modal">
@@ -37,43 +41,46 @@
 
     <!-- Container for the barcode-->
     <svg id="code128" display="none" ;></svg>
+    <svg id="svgSeedName" display="none" ;>hej mor</svg>
     <!-- Temprorary spacing-->
-    <br><br>
 
-    <table id="activeLotsTable">
-        <tr>
-            <th>Shelf number</th>
-            <th>Tray number</th>
-            <th>Lot number</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Lot sown</th>
-            <th>Lot under light</th>
-            <th>Lot partial harvest</th>
-            <th>Lot harvested</th>
-            <th>Total Weight</th>
-            <th>Sent to?</th>
-        </tr>
-    </table>
+    <div class="tableContainer">
+        <div class="tableTitle">Active Lots:</div>
+        <table id="activeLotsTable">
+            <tr class="tableHeader">
+                <th>Shelf number</th>
+                <th>Tray number</th>
+                <th>Lot number</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Lot sown</th>
+                <th>Lot under light</th>
+                <th>Lot partial harvest</th>
+                <th>Lot harvested</th>
+                <th>Total Weight</th>
+                <th>Sent to?</th>
+            </tr>
+        </table>
 
-    <!--<button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>-->
+        <!--<button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>-->
 
-
-    <table id="inactiveLotsTable" style="margin-top:300px;">
-        <tr>
-            <th>Shelf number</th>
-            <th>Tray number</th>
-            <th>Lot number</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Lot sown</th>
-            <th>Lot under light</th>
-            <th>Lot partial harvest</th>
-            <th>Lot harvested</th>
-            <th>Total Weight</th>
-            <th>Sent to?</th>
-        </tr>
-    </table>
+        <div class="tableTitle" style="margin-top:300px;">Harvested Lots:</div>
+        <table id="inactiveLotsTable">
+            <tr class="tableHeader">
+                <th>Shelf number</th>
+                <th>Tray number</th>
+                <th>Lot number</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Lot sown</th>
+                <th>Lot under light</th>
+                <th>Lot partial harvest</th>
+                <th>Lot harvested</th>
+                <th>Total Weight</th>
+                <th>Sent to?</th>
+            </tr>
+        </table>
+    </div>
 
     <!-- Import custom javascript-->
     <script>//fra databasen.</script>

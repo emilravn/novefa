@@ -22,7 +22,7 @@ function PrintProduce() {
     ProduceCount++; // Make Barcode one larger than the previous
     var ProduceBarcode = "F" + pad(ProduceCount, 9).toString(); // add prefix as well as leading 0's
     JsBarcode("#code128", ProduceBarcode); // Input the barcode into barcode.js, using the format Code128.
-    printDivInPopUp() // Prints the div in new window to get correct output
+    printDivInPopUp(); // Prints the div in new window to get correct output
     updateCounts("seeds", ProduceCount);
 
     //tilføj den nye seed til databasen. og reset input field.
