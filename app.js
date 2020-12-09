@@ -99,7 +99,6 @@ app.get('/admin-panel/', function (req, res) {
 
 
         handleSql(query, "return lots", function (allLots) {
-            console.log(allLots);
         var string = JSON.stringify(allLots);
         res.render(path + 'admin-panel/admin-panel.html', { allLots: string });
     }); 
@@ -115,7 +114,6 @@ app.get('/scan', function (req, res) {
         var query = "select count from counter where type = 'lots';";
 
         handleSql(query, "return lots", function (count) {
-            console.log(count[0].count);
             res.render(path + 'scan/scan.html', { hej: count[0].count.toString() });
         }); 
 
