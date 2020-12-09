@@ -260,7 +260,8 @@ app.get('/scan/newLot', function (req, res) {
     var query = `insert into lots (${columns}) select ${tray}, '${lot}', '', '', '${sown}', type from seeds where barcode = '${seed}';`;
 
     handleSql(query);
-    res.send("WHEEE (response text)");
+    var now = new Date();
+    res.send(`New lot inserted! (${now})`);
 });
 
 app.get('/scan/updateShelf', function (req, res) {
@@ -270,7 +271,8 @@ app.get('/scan/updateShelf', function (req, res) {
     var query = `UPDATE lots SET shelf = ${shelf} WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`;
 
     handleSql(query);
-    res.send("WHEEE (response text)");
+    var now = new Date();
+    res.send(`Lot shelf updated! (${now})`);
 });
 
 app.get('/admin-panel/newSeed', function (req, res) { //til indsæt test lot fra admin panel.

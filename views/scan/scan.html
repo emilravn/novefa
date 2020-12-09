@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Barcode scan</title>
+    <link rel="stylesheet" href="../admin-panel/admin-panel.css">
+    <link rel="stylesheet" href="scan.css">
 </head>
 <body>
+    <div class="headerContainer">
+        <div class="header">
+            <h1>Barcode scanning</h1>
+            <!-- Trigger/Open The Modal -->
+            <button class="headerButton" id="myBtn">Print</button>
+            <button class="headerButton" onclick="download_csv()">export</button>
+            <button class="headerButton" onclick="location.href='../admin-panel'" type="button">Go back</button>
+        </div>
+    </div>
 
-    <h2>Novefa - Barcode scanner</h2>
-    <label for="lot">Tray:</label>
-    <input type="text" id="lot" name="lot" autofocus><br><br>
-    <label for="action">Action:</label>
-    <input type="text" id="action" name="action"><br><br>
-    <p id="message"></p>
-    <p id="message2"></p>
+    <div class="scanContainer">
+        <h2>Barcode scannings:</h2>
+        <label for="lot">Tray: &nbsp;&nbsp;</label>
+        <input type="text" id="lot" name="lot" autofocus><br><br>
+        <label for="action">Action:</label>
+        <input type="text" id="action" name="action"><br><br>
+        <p id="message"></p>
+        <p id="message2"></p>
+    </div>
 
     <!-- Include external javascript-->
     <script>var lotCount = <%= hej %>;</script>

@@ -3,20 +3,26 @@ var actionField = document.getElementById("action");
 var trayField = document.getElementById("lot");
 var messageField = document.getElementById("message");
 
+document.body.addEventListener('keyup', function (e) {
+    if (e.keyCode == 13) { //enter key
+
+        if (!formReady) {
+            formReady = true;
+            actionField.focus();
+        }
+
+        else {
+            sendData();
+            formReady = false;
+            trayField.focus();
+            trayField.value = "";
+            actionField.value = "";
+        }
+
+    }
+});
 
 function sendData() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("message2").innerHTML = this.responseText;
-            //api kald.
-        }
-    };
-    xmlhttp.open("GET", "searching?lot=" + trayField.value + "&action=" + actionField.value, true);
-    xmlhttp.send();
-}
-
-function sendDataTEST() {
     var tmp = actionField.value;
     var firstChar = tmp.charAt(0);
 
@@ -68,26 +74,6 @@ function trimBarcode(barcode) {
 
     return s;
 }
-
-
-document.body.addEventListener('keyup', function (e) {
-    if (e.keyCode == 13) { //enter key
-
-        if (!formReady) {
-            formReady = true;
-            actionField.focus();
-        }
-
-        else {
-            sendDataTEST();
-            formReady = false;
-            trayField.focus();
-            trayField.value = "";
-            actionField.value = "";
-        }
-
-    }
-});
 
 
 
