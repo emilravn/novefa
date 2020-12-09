@@ -199,8 +199,21 @@ app.get('/admin-panel/export', function (req, res) {
         for (var i = 0; i < arrayOfObjects.length; i++) {
             var obj = arrayOfObjects[i];
             var sown = obj.sown.split("T")[0];
-            var underlight = obj.underlight.split("T")[0];
-            var harvested = obj.harvested.split("T")[0];
+            try {
+                var underlight = obj.underlight.split("T")[0];
+            }
+            catch (err) {
+                var underlight = "";
+            }
+
+            try {
+                var harvested = obj.harvested.split("T")[0];
+            }
+            catch (err) {
+                var harvested = "";
+            }
+            
+            
 
             //find partialHarvest og de tilhørende sentto
             var partialHarvest;
@@ -255,9 +268,9 @@ app.get('/scan/newLot', function (req, res) {
 
     var sown = new Date().toISOString();
 
-    var columns = "`tray`, `lot`, `partialHarvest`, `sentTo`, `sown`, `type`";
+    var columns = "`tray`, `lot`, `partialHarvest`, `sentTo`, `sown`, `harvested`, `type`";
 
-    var query = `insert into lots (${columns}) select ${tray}, '${lot}', '', '', '${sown}', type from seeds where barcode = '${seed}';`;
+    var query = `insert into lots (${columns}) select ${tray}, '${lot}', '', '', '${sown}', '', type from seeds where barcode = '${seed}';`;
 
     handleSql(query);
     var now = new Date();
