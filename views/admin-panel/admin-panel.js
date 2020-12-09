@@ -276,6 +276,15 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 return string;
             }
 
+            get getWeight() {
+                if (this.weight == null) {
+                    return "";
+                }
+                else {
+                    return this.weight;
+                }
+            }
+
             addToTable() {
                 var sownSelected = "";
                 var underLightSelected = "";
@@ -309,7 +318,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     <span class="tooltiptext">${this.getPartialHarvestToolTip}</span>
                 </td>
                 <td class="harvested">${this.getHarvestedAge}</td>
-                <td><input value="${this.weight}" onchange="Lot.weightChange(this)"/></td>
+                <td><input value="${this.getWeight}" onchange="Lot.weightChange(this)"/></td>
                 <td class="tooltip"><input value="${this.getSentToValue}" onchange="Lot.sentToChange(this)"/>
                     <span class="tooltiptext">${this.getSentToToolTip}</span>
                 </td>

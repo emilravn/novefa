@@ -253,9 +253,11 @@ app.get('/scan/newLot', function (req, res) {
     var lot = req.query.lot; 
     var seed = req.query.seed; //skal have data fra typen!!!! dvs. type F00000001 er jo "broccoli".
 
-    var columns = "`tray`, `lot`, `type`";
+    var sown = new Date().toISOString();
 
-    var query = `insert into lots (${columns}) select ${tray}, '${lot}', type from seeds where barcode = '${seed}';`;
+    var columns = "`tray`, `lot`, `partialHarvest`, `sentTo`, `sown`, `type`";
+
+    var query = `insert into lots (${columns}) select ${tray}, '${lot}', '', '', '${sown}', type from seeds where barcode = '${seed}';`;
 
     handleSql(query);
     res.send("WHEEE (response text)");
@@ -266,8 +268,6 @@ app.get('/scan/updateShelf', function (req, res) {
     var shelf = req.query.shelf;
 
     var query = `UPDATE lots SET shelf = ${shelf} WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`;
-
-    console.log(query);
 
     handleSql(query);
     res.send("WHEEE (response text)");
