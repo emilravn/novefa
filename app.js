@@ -94,11 +94,12 @@ app.get('/admin-panel/', function (req, res) {
         query = `select * from lots;`;
     }
     else {
-        query = `select * from lots limit 50;`;
+        query = `select * from lots order by lot desc limit 50;`;
     }
 
 
         handleSql(query, "return lots", function (allLots) {
+            console.log(allLots);
         var string = JSON.stringify(allLots);
         res.render(path + 'admin-panel/admin-panel.html', { allLots: string });
     }); 
