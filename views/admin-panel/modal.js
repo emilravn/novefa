@@ -23,3 +23,28 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 }
+
+
+//https://stackoverflow.com/a/10126042
+//realods the page every 5 min idle. In order to update the page without manual reload.
+var inactivityTime = function () {
+    var time;
+    window.onload = resetTimer;
+    // DOM Events
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    function logout() {
+        location.reload();
+    }
+
+    function resetTimer() {
+        clearTimeout(time);
+        var fiveMinutes = 1000 * 60 * 5;
+        time = setTimeout(logout, fiveMinutes)
+        // 1000 milliseconds = 1 second
+    }
+};
+
+
+inactivityTime();
