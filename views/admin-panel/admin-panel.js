@@ -24,6 +24,12 @@ function PrintProduce() {
     JsBarcode("#code128", ProduceBarcode); // Input the barcode into barcode.js, using the format Code128.
     printDivInPopUp() // Prints the div in new window to get correct output
     updateCounts("seeds", ProduceCount);
+
+    //tilføj den nye seed til databasen. og reset input field.
+    var seedInput = document.getElementById("seedName");
+    var seedName = seedInput.value;
+    newSeedDatabase(ProduceBarcode, seedName);
+    seedInput.value = "";
 }
 
 function newLot() {
@@ -547,5 +553,15 @@ function updateCounts(type, count) {
         }
     };
     xmlhttp.open("GET", `/admin-panel/updateCounts?type=${type}&count=${count}`, true);
+    xmlhttp.send();
+}
+
+function newSeedDatabase(barcode, seedName) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+        }
+    };
+    xmlhttp.open("GET", `newSeed?barcode=${barcode}&seedname=${seedName}`, true);
     xmlhttp.send();
 }

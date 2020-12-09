@@ -273,6 +273,18 @@ app.get('/scan/updateShelf', function (req, res) {
     res.send("WHEEE (response text)");
 });
 
+app.get('/admin-panel/newSeed', function (req, res) { //til indsæt test lot fra admin panel.
+    var barcode = req.query.barcode;
+    var seedName = req.query.seedname;
+
+    var columns = "`barcode`, `type`";
+
+    var query = `insert into seeds (${columns}) values ('${barcode}', '${seedName}');`;
+
+    handleSql(query);
+
+    res.send("WHEEE (response text)");
+});
 
 app.get('/admin-panel/newLot', function (req, res) { //til indsæt test lot fra admin panel.
     var values = req.query.values;

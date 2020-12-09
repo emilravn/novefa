@@ -22,12 +22,14 @@
             <span class="close">&times;</span>
             <!-- Remember to insert link to scan page-->
             <!--Print Options -->
-            <button id="PrintProduce" onclick="PrintProduce();">New Seed</button>
-            <button id="PrintTray" onclick="PrintTray();">New Tray</button>
-            <button id="PrintShelf" onclick="PrintShelf();">New Shelf</button>
+            <button class="printOption" id="PrintTray" onclick="PrintTray();">New Tray</button><br />
+            <button class="printOption" id="PrintShelf" onclick="PrintShelf();">New Shelf</button><br />
+            <button class="printOption" id="PrintProduce" onclick="PrintProduce();">New Seed</button>
+            <input class="inputStyle" type="text" id="seedName" placeholder="seed name here. fx broccoli"><br />
+
             <!-- Manual print option-->
-            <input type="text" name="txt_input" id="txt_input">
-            <button id="PrintManually" onclick="ManualBarcodeEntry();">Generate Barcode</button>
+            <button class="printOption" id="PrintManually" onclick="ManualBarcodeEntry();">Custom Barcode</button>
+            <input class="inputStyle" type="text" name="txt_input" id="txt_input" placeholder="custom barcode here">
         </div>
 
     </div>

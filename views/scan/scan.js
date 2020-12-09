@@ -108,3 +108,4 @@ function updateLotCount() {
     xmlhttp.open("GET", `/admin-panel/updateCounts?type=lots&count=${lotCount}`, true);
     xmlhttp.send();
 }
+
