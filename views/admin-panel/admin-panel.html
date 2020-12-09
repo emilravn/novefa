@@ -47,43 +47,52 @@
     <!-- Temprorary spacing-->
 
     <div class="tableContainer">
-        <div class="tableTitle">Active Lots:</div>
-        <table id="activeLotsTable">
-            <tr class="tableHeader">
-                <th>Shelf number</th>
-                <th>Tray number</th>
-                <th>Lot number</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Lot sown</th>
-                <th>Lot under light</th>
-                <th>Lot partial harvest</th>
-                <th>Lot harvested</th>
-                <th>Total Weight</th>
-                <th>Sent to?</th>
-            </tr>
-        </table>
+        <div id="activeTableContainer" style="display: block;">
+            <!--nix pille. det skal være sådan her-->
+            <div class="tableTitle">Active Lots:</div>
+            <table id="activeLotsTable">
+                <tr class="tableHeader">
+                    <th>Shelf number</th>
+                    <th>Tray number</th>
+                    <th>Lot number</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Lot sown</th>
+                    <th>Lot under light</th>
+                    <th>Lot partial harvest</th>
+                    <th>Lot harvested</th>
+                    <th>Total Weight</th>
+                    <th>Sent to?</th>
+                </tr>
+            </table>
+        </div>
 
         <!--<button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>-->
-
-        <div class="tableTitle" style="margin-top:300px;">Harvested Lots:</div>
-        <table id="inactiveLotsTable">
-            <tr class="tableHeader">
-                <th>Shelf number</th>
-                <th>Tray number</th>
-                <th>Lot number</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Lot sown</th>
-                <th>Lot under light</th>
-                <th>Lot partial harvest</th>
-                <th>Lot harvested</th>
-                <th>Total Weight</th>
-                <th>Sent to?</th>
-            </tr>
-        </table>
+        <div id="inactiveTableContainer">
+            <div class="tableTitle">Harvested Lots:</div>
+            <table id="inactiveLotsTable">
+                <tr class="tableHeader">
+                    <th>Shelf number</th>
+                    <th>Tray number</th>
+                    <th>Lot number</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Lot sown</th>
+                    <th>Lot under light</th>
+                    <th>Lot partial harvest</th>
+                    <th>Lot harvested</th>
+                    <th>Total Weight</th>
+                    <th>Sent to?</th>
+                </tr>
+            </table>
+        </div>
     </div>
 
+    <div class="navigator">
+        <button id="showActive" class="active" onclick="toggleTable('activeTable')">Show active</button>
+        <button id="showInactive" onclick="toggleTable('inactiveTable')">Show inactive</button>
+        <button id="showBoth" onclick="toggleTable('both')">Show both</button>
+    </div>
     <!-- Import custom javascript-->
     <script>//fra databasen.</script>
     <script src="admin-panel.js"></script>
@@ -92,6 +101,8 @@
     <!--Include barcode.js plugin to generate barcodes-->
     <script src="../plugins/JsBarcode.all.min.js"></script>
     <script src="./modal.js"></script>
+
+
 
 </body>
 </html>

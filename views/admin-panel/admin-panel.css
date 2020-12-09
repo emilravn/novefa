@@ -199,3 +199,33 @@ tbody:nth-child(odd) {
     background-color: #245651 !important;
     color: white;
 }
+
+#inactiveTableContainer {
+    display: none;
+}
+
+.navigator {
+    position: fixed;
+    bottom: 0px;
+    left: 20px;
+    z-index:99999;
+}
+
+.navigator button {
+    border: 1px solid black;
+    background: #e3e3e3;
+    border-bottom: none;
+    padding: 7px;
+    margin: 0px;
+}
+
+.navigator button:hover {
+    cursor: pointer !important;
+}
+
+.navigator button.active {
+    background-color: #245651;
+    color: white;
+    padding: 7px;
+    border-top: 10px solid #245651;
+}

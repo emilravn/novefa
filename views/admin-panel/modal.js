@@ -46,5 +46,57 @@ var inactivityTime = function () {
     }
 };
 
-
 inactivityTime();
+
+//til at kunne navigere nede i venstre hjørne.
+var activeBtn = document.getElementById("showActive");
+var inactiveBtn = document.getElementById("showInactive");
+var bothBtn = document.getElementById("showBoth");
+
+var activeContainer = document.getElementById("activeTableContainer");
+var inactiveContainer = document.getElementById("inactiveTableContainer");
+
+function toggleTable(table) {
+    if (table == "both") {
+        activeContainer.style.display = "block";
+        inactiveContainer.style.display = "block";
+        removeActive();
+        bothBtn.classList.add("active");
+        bothBtn.blur();
+    }
+    else if (table == "activeTable") {
+        activeContainer.style.display = "block";
+        inactiveContainer.style.display = "none";
+        removeActive();
+        activeBtn.classList.add("active");
+        activeBtn.blur();
+    }
+    else {
+        activeContainer.style.display = "none";
+        inactiveContainer.style.display = "block";
+        removeActive();
+        inactiveBtn.classList.add("active");
+        inactiveBtn.blur();
+    }
+}
+
+function removeActive() {
+    try {
+        activeBtn.classList.remove("active");
+    }
+    catch (err) {
+
+    }
+    try {
+        inactiveBtn.classList.remove("active");
+    }
+    catch (err) {
+
+    }
+    try {
+        bothBtn.classList.remove("active");
+    }
+    catch (err) {
+
+    }
+}
