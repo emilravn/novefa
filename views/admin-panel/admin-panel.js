@@ -531,7 +531,7 @@ function updateCounts(type, count) {
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var result = JSON.parse(this.response);
-            ShelfCount = result[0].count;
+            ShelfCount = result[0].count; //de 4 linjer her kan bare slettes. Tror jeg :)
             TrayCount = result[1].count;
             ProduceCount = result[2].count;
             LotCount = result[3].count;

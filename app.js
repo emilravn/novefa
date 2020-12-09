@@ -111,7 +111,13 @@ app.get('/admin-panel/', function (req, res) {
 // Scan route
 app.get('/scan', function (req, res) {
     if (req.session.loggedin) {
-        res.sendFile(path + 'scan/scan.html');
+        var query = "select count from counter where type = 'lots';";
+
+        handleSql(query, "return lots", function (count) {
+            console.log(count[0].count);
+            res.render(path + 'scan/scan.html', { hej: count[0].count.toString() });
+        }); 
+
     } else {
         res.send('Please login to view this page!');
     }
@@ -175,6 +181,7 @@ app.get('/admin-panel/updateCounts', function (req, res) {
     handleSql(query, "return lots", function (result) {
     });
 });
+
 
 
 app.get('/admin-panel/export', function (req, res) {
@@ -241,7 +248,21 @@ app.get('/admin-panel/export', function (req, res) {
 });
 
 
-app.get('/admin-panel/newLot', function (req, res) {
+app.get('/scan/newLot', function (req, res) { 
+    var tray = req.query.tray; 
+    var lot = req.query.lot; 
+    var seed = req.query.seed; //skal have data fra typen!!!! dvs. type F00000001 er jo "broccoli".
+
+    var columns = "`tray`, `lot`, `type`";
+
+    var query = `insert into lots (${columns}) select ${tray}, '${lot}', type from seeds where barcode = '${seed}';`;
+
+    handleSql(query);
+    res.send("WHEEE (response text)");
+});
+
+
+app.get('/admin-panel/newLot', function (req, res) { //til indsæt test lot fra admin panel.
     var values = req.query.values;
 
     var valuesArray = values.split("_");
@@ -253,7 +274,6 @@ app.get('/admin-panel/newLot', function (req, res) {
     var query = `insert into lots (${columns}) values (${valuesString});`;
 
     handleSql(query);
-    
 
     res.send("WHEEE (response text)");
 });
