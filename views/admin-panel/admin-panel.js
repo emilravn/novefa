@@ -233,7 +233,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             }
             get getHarvestedAge() {
                 if (this.status == "harvested") {
-                    return dateStringDanish(this.harvested); //her er det jo bare datoen der skal returneres.
+                    return dateStringEnglish(this.harvested); //her er det jo bare datoen der skal returneres.
                 }
                 return "";
             }
@@ -485,19 +485,20 @@ function parseISOString(s) {
     }   
 }
 
-function dateStringDanish(date) {
+function dateStringEnglish(date) {
     if (date == null) {
         return "N/A";
     }
 
     var d = new Date(date);
-    const danishMonths = ["Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"];
+    const danishMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var day = d.getDay();
     var month = d.getMonth();
     var numericDay = d.getDate();
     var year = d.getFullYear();
 
-    var dateString = numericDay + ". " + danishMonths[month] + ", " + year;
+    //https://www.grammarly.com/blog/how-to-write-dates/
+    var dateString = numericDay + " " + danishMonths[month] + " " + year;
     return dateString;
 }
 
