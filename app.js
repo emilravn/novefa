@@ -293,7 +293,7 @@ app.get('/scan/updateAktivesensorer', function (req, res) {
     var lot = req.query.lot;
     var shelf = req.query.shelf;
 
-    var query = `UPDATE aktivesensorer SET BatchID = ${lot} WHERE ID = ${shelf};`;
+    var query = `UPDATE aktivesensorer SET lot_id = ${lot} WHERE ID = ${shelf};`;
 
     handleSql(query);
     var now = new Date();
