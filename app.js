@@ -267,9 +267,9 @@ app.get('/scan/newLot', function (req, res) {
 
     var sown = new Date().toISOString();
 
-    var columns = "`tray`, `lot`, `partialHarvest`, `sentTo`, `sown`, `harvested`, `type`";
+    var columns = "`status`, `tray`, `lot`, `partialHarvest`, `sentTo`, `sown`, `harvested`, `type`";
 
-    var query = `insert into lots (${columns}) select ${tray}, '${lot}', '', '', '${sown}', '', type from seeds where barcode = '${seed}';`;
+    var query = `insert into lots (${columns}) select 'sown', ${tray}, '${lot}', '', '', '${sown}', '', type from seeds where barcode = '${seed}';`;
 
     handleSql(query);
     var now = new Date();
@@ -285,6 +285,32 @@ app.get('/scan/updateShelf', function (req, res) {
     handleSql(query);
     var now = new Date();
     res.send(`Lot shelf updated! (${now})`);
+});
+
+app.get('/scan/getStatus', function (req, res) {
+    var tray = req.query.tray;
+
+    var query = `SELECT status FROM lots WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`; //nyeste tray.
+
+    handleSql(query, "return lots", function (result) {
+        res.send(result[0].status);
+    });
+});
+
+app.get('/scan/updateStatus', function (req, res) {
+    var tray = req.query.tray;
+    var newStatus = req.query.newstatus;
+
+    var dateColumn = newStatus.toLowerCase();
+
+    var date = new Date().toISOString();
+    //HUSK AT SETTE ISODATE OGSÅ.
+
+    var query = `UPDATE lots SET status = '${newStatus}', ${dateColumn} = '${date}'  WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`;
+
+    handleSql(query);
+    var now = new Date();
+    res.send(`Lot status updated! (${now})`);
 });
 
 app.get('/admin-panel/newSeed', function (req, res) { //til indsæt test lot fra admin panel.

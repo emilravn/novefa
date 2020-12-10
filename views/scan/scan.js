@@ -27,7 +27,7 @@ function sendData() {
     var firstChar = tmp.charAt(0);
 
     if (firstChar == "F") { //tilføj nyt frø
-        
+
         lotCount++;
         var lot = "L" + pad(lotCount, 9).toString();
         updateLotCount();
@@ -40,6 +40,10 @@ function sendData() {
         var tray = trimBarcode(trayField.value);
         var shelf = trimBarcode(actionField.value);
         updateShelfDatabase(tray, shelf);
+    }
+    else if (firstChar == "T") { //ændre status, fx under light og harvested
+        var tray = trimBarcode(trayField.value);
+        getStatus(tray);
     }
 }
 
@@ -92,6 +96,34 @@ function updateLotCount() {
         }
     };
     xmlhttp.open("GET", `/admin-panel/updateCounts?type=lots&count=${lotCount}`, true);
+    xmlhttp.send();
+}
+
+function getStatus(tray) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var status = this.responseText;
+            //updateStatus
+            if (status == "sown") {
+                updateStatus(tray, "underLight");
+            }
+            else {
+                updateStatus(tray, "harvested");
+            }
+        }
+    };
+    xmlhttp.open("GET", `/scan/getStatus?tray=${tray}`, true);
+    xmlhttp.send();
+}
+
+function updateStatus(tray, newStatus) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+        }
+    };
+    xmlhttp.open("GET", `/scan/updateStatus?tray=${tray}&newstatus=${newStatus}`, true);
     xmlhttp.send();
 }
 
