@@ -289,6 +289,27 @@ app.get('/scan/updateShelf', function (req, res) {
     res.send(`Lot shelf updated! (${now})`);
 });
 
+app.get('/scan/updateAktivesensorer', function (req, res) {
+    var lot = req.query.lot;
+    var shelf = req.query.shelf;
+
+    var query = `UPDATE aktivesensorer SET BatchID = ${lot} WHERE ID = ${shelf};`;
+
+    handleSql(query);
+    var now = new Date();
+    res.send(`Lot shelf updated! (${now})`);
+});
+
+app.get('/scan/getLotFromTray', function (req, res) {
+    var tray = req.query.tray;
+
+    var query = `SELECT lot FROM lots WHERE tray = ${tray} order by lot desc limit 1;`;
+
+    handleSql(query, "return lots", function (result) {
+        res.send(result[0].lot);
+    });
+});
+
 app.get('/scan/getStatus', function (req, res) {
     var tray = req.query.tray;
 

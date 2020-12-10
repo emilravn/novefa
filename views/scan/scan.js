@@ -40,6 +40,8 @@ function sendData() {
         var tray = trimBarcode(trayField.value);
         var shelf = trimBarcode(actionField.value);
         updateShelfDatabase(tray, shelf);
+
+        updateAktivesensorer(tray, shelf);
     }
     else if (firstChar == "T") { //ændre status, fx under light og harvested
         var tray = trimBarcode(trayField.value);
@@ -124,6 +126,30 @@ function updateStatus(tray, newStatus) {
         }
     };
     xmlhttp.open("GET", `/scan/updateStatus?tray=${tray}&newstatus=${newStatus}`, true);
+    xmlhttp.send();
+}
+
+function updateAktivesensorerAction(shelf, lot) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+        }
+    };
+    xmlhttp.open("GET", `/scan/updateAktivesensorer?shelf=${shelf}&lot=${lot}`, true);
+    xmlhttp.send();
+}
+
+function updateAktivesensorer(tray, shelf) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var lot = this.responseText;
+            var trimmedLot = trimBarcode(lot);
+
+            updateAktivesensorerAction(shelf, trimmedLot);
+        }
+    };
+    xmlhttp.open("GET", `/scan/getLotFromTray?tray=${tray}`, true);
     xmlhttp.send();
 }
 
