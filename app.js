@@ -94,7 +94,7 @@ app.get('/admin-panel/', function (req, res) {
         query = `select * from lots;`;
     }
     else {
-        query = `select * from lots order by lot desc limit 50;`;
+        query = `select * from lots order by lot desc limit 100;`;
     }
 
 
