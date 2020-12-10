@@ -1,0 +1,231 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+/* Udkokumenteret for nu, tror ikke den gør noget
+#PrintShelf {
+    display: block;
+}
+*/
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+}
+
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 198px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 5px 4px;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+        top: 85%;
+        left: 50%;
+        margin-left: -103px;
+        text-align: left;
+        font-size: 12px;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+
+/* Use this specific styling when printing to label-printer */
+@media print {
+    body, html, #code128 {
+        margin: 0px !important;
+        padding: 0px !important;
+        border: 0px;
+    }
+
+    #code128 {
+        display: inline;
+        position: absolute;
+        left: 25%;
+        width: 180px; /* dependendt on label size */
+        height: auto;
+    }
+
+    @page {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+a.aAsButton {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: initial;
+}
+
+.printOption {
+    border: none;
+    background-color: #245651;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 12px;
+    color: #FFF;
+    -webkit-box-shadow: 0 -2px rgba(0,0,0,0.1) inset;
+    margin-bottom: 30px;
+    width: 130px;
+}
+
+.inputStyle {
+    border-radius: 2px;
+    border: 1px solid black;
+    padding: 8px;
+    background-color: #f1f1f1;
+}
+
+.headerButton {
+    background-color: #245651 !important;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    font-size: 14px;
+    width: 100px;
+    text-transform: uppercase;
+    float: right;
+    margin-left: 10px;
+}
+
+    .headerButton:hover, printOption:hover {
+        cursor: pointer;
+        background-color: #29694a !important;
+    }
+
+div.header {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 22px;
+}
+
+h1 {
+    display: inline;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #373737;
+}
+
+.headerContainer {
+    //background-color: #373737;
+    background-image: url("../../bgheader.png");
+    background-repeat: repeat-x; 
+    height: 80px;
+}
+
+body {
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.tableContainer {
+    margin: 0 10px;
+}
+
+.tableTitle {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    color: #245651;
+}
+
+tbody:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.tableHeader {
+    background-color: #245651 !important;
+    color: white;
+}
+
+#inactiveTableContainer {
+    display: none;
+}
+
+.navigator {
+    position: fixed;
+    bottom: 0px;
+    left: 20px;
+    z-index:99999;
+}
+
+.navigator button {
+    border: 1px solid black;
+    background: #e3e3e3;
+    border-bottom: none;
+    padding: 7px;
+    margin: 0px;
+}
+
+.navigator button:hover {
+    cursor: pointer !important;
+}
+
+.navigator button.active {
+    background-color: #245651;
+    color: white;
+    padding: 7px;
+    border-top: 10px solid #245651;
+}

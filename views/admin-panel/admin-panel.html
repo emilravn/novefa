@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin-panel.css">
+    <link rel="shortcut icon" type="image/png" href="../../favicon.png" />
+    <title>Admin panel</title>
+</head>
+
+<body>
+    <div class="headerContainer">
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <button class="headerButton" onclick="location.href='/admin-panel/?showall=true/'" type="button">All lots</button>
+            <!-- Trigger/Open The Modal -->
+            <button class="headerButton" id="myBtn">Print</button>
+            <button class="headerButton" onclick="download_csv()">export</button>
+            <button class="headerButton" onclick="location.href='../scan'" type="button">Scan</button>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <!-- Remember to insert link to scan page-->
+            <!--Print Options -->
+            <button class="printOption" id="PrintTray" onclick="PrintTray();">New Tray</button><br />
+            <button class="printOption" id="PrintShelf" onclick="PrintShelf();">New Shelf</button><br />
+            <button class="printOption" id="PrintProduce" onclick="PrintProduce();">New Seed</button>
+            <input class="inputStyle" type="text" id="seedName" placeholder="seed name here. fx broccoli"><br />
+
+            <!-- Manual print option-->
+            <button class="printOption" id="PrintManually" onclick="ManualBarcodeEntry();">Custom Barcode</button>
+            <input class="inputStyle" type="text" name="txt_input" id="txt_input" placeholder="custom barcode here">
+        </div>
+
+    </div>
+
+
+    <!-- Container for the barcode-->
+    <svg id="code128" display="none" ;></svg>
+    <svg id="svgSeedName" display="none" ;>hej mor</svg>
+    <!-- Temprorary spacing-->
+
+    <div class="tableContainer">
+        <div id="activeTableContainer" style="display: block;">
+            <!--nix pille. det skal være sådan her-->
+            <div class="tableTitle">Active Lots:</div>
+            <table id="activeLotsTable">
+                <tr class="tableHeader">
+                    <th>Shelf number</th>
+                    <th>Tray number</th>
+                    <th>Lot number</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Lot sown</th>
+                    <th>Lot under light</th>
+                    <th>Lot partial harvest</th>
+                    <th>Lot harvested</th>
+                    <th>Total Weight</th>
+                    <th>Sent to?</th>
+                </tr>
+            </table>
+        </div>
+
+        <!--<button onclick="Lot.createNewLot('27', 'softice')">Add new test lot</button>-->
+        <div id="inactiveTableContainer">
+            <div class="tableTitle">Harvested Lots:</div>
+            <table id="inactiveLotsTable">
+                <tr class="tableHeader">
+                    <th>Shelf number</th>
+                    <th>Tray number</th>
+                    <th>Lot number</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Lot sown</th>
+                    <th>Lot under light</th>
+                    <th>Lot partial harvest</th>
+                    <th>Lot harvested</th>
+                    <th>Total Weight</th>
+                    <th>Sent to?</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="navigator">
+        <button id="showActive" class="active" onclick="toggleTable('activeTable')">Show active</button>
+        <button id="showInactive" onclick="toggleTable('inactiveTable')">Show inactive</button>
+        <button id="showBoth" onclick="toggleTable('both')">Show both</button>
+    </div>
+    <!-- Import custom javascript-->
+    <script>//fra databasen.</script>
+    <script src="admin-panel.js"></script>
+    <script>Lot.importDbLots('<%= allLots %>');</script>
+    <script>importCounts();</script>
+    <!--Include barcode.js plugin to generate barcodes-->
+    <script src="../plugins/JsBarcode.all.min.js"></script>
+    <script src="./modal.js"></script>
+
+
+
+</body>
+</html>

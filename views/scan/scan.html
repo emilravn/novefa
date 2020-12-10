@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode scan</title>
+    <link rel="stylesheet" href="../admin-panel/admin-panel.css">
+    <link rel="stylesheet" href="scan.css">
+    <link rel="shortcut icon" type="image/png" href="../../favicon.png" />
+</head>
+<body>
+    <div class="headerContainer">
+        <div class="header">
+            <h1>Barcode scanning</h1>
+            <button class="headerButton" onclick="location.href='../admin-panel'" type="button">Go back</button>
+        </div>
+    </div>
+
+    <div class="scanContainer">
+        <h2>Barcode scannings:</h2>
+        <label for="lot">Tray: &nbsp;&nbsp;</label>
+        <input type="text" id="lot" name="lot" autofocus><br><br>
+        <label for="action">Action:</label>
+        <input type="text" id="action" name="action"><br><br>
+        <p id="message"></p>
+        <p id="message2"></p>
+    </div>
+
+    <!-- Include external javascript-->
+    <script>var lotCount = <%= hej %>;</script>
+    <script src="scan.js"></script>
+
+</body>
+</html>
