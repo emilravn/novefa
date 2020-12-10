@@ -31,14 +31,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// Connection for login (not con) <-- Does this need to be in  a method??
-var connection = mysql.createConnection({
-    host: "mysql78.unoeuro.com",
-    user: "multicrypt_io",
-    password: "D2gnzGrdcamy",
-    database: "multicrypt_io_db"
-});
-
 // Print message in console at bootup
 app.listen(port, function () {
     console.log(`I\'m listening for you on port ${port}!`)
@@ -63,18 +55,19 @@ app.post('/login', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     if (username && password) {
-        // check if user exists
-        connection.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+
+        var query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+
+        handleSql(query, "return lots", function (results) {
             if (results.length > 0) {
                 req.session.loggedin = true;
                 req.session.username = username;
                 res.redirect('../admin-panel/');
             } else {
                 res.send('Incorrect Username and/or Password!');
-
             }
-            res.end();
         });
+
     } else {
         res.send('Please enter Username and Password!');
         res.end();
@@ -134,6 +127,14 @@ function handleSql(query, responseAction = "", callback) {
         password: "D2gnzGrdcamy",
         database: "multicrypt_io_db"
     });
+
+    /*var con = mysql.createConnection({
+        host: "mysql5-5num1.webhosting.dk",
+        user: "mdbuser9207323",
+        password: "6aok92np",
+        database: "mdbuser9207323"
+    });*/
+
     con.connect(function (err) {
         if (err) throw err;
     });
@@ -281,6 +282,7 @@ app.get('/scan/updateShelf', function (req, res) {
     var shelf = req.query.shelf;
 
     var query = `UPDATE lots SET shelf = ${shelf} WHERE tray = ${tray} ORDER BY lot DESC LIMIT 1;`;
+    //"UPDATE aktivesensorer SET BatchID = '${lot}' WHERE ID = ${shelf}"; ØRN OG DENNES. kun trim shelf. 
 
     handleSql(query);
     var now = new Date();
