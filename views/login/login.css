@@ -96,6 +96,7 @@ button {
     button:hover {
         transform: translateY(-3px);
         box-shadow: 0 2px 6px -1px rgba(182, 157, 230, .65);
+        cursor: pointer;
     }
 
         button:hover:active {
