@@ -2,7 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\views",
-    "\\views\\admin-panel"
+    "\\views\\admin-panel",
+    "\\views\\scan"
   ],
   "SelectedNode": "\\app.js",
   "PreviewInSolutionExplorer": false
