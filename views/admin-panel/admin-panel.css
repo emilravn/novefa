@@ -229,3 +229,7 @@ tbody:nth-child(odd) {
     padding: 7px;
     border-top: 10px solid #245651;
 }
+
+.width40 {
+    width: 40px;
+}

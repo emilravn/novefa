@@ -87,13 +87,14 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
 
         class Lot {
             //bruges når der skal mappes eksisterende lots til javascript.
-            constructor(id, shelf, tray, lot, type, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
+            constructor(id, shelf, tray, lot, type, seedWeight, status, sown, underLight, partialHarvest, harvested, weight, sentTo, newLot = false) {
                 this.DOMobject = null;
                 this.id = id;
                 this.shelf = shelf;
                 this.tray = tray;
                 this.lot = lot;
                 this.type = type;
+                this.seedWeight = seedWeight; //nået hertil.
                 this.status = status;
                 this.sown = sown;
                 this.underLight = underLight;
@@ -132,7 +133,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 var sownTime = new Date();
                 var emptyArray = "[]";
                 var emptyArray2 = "[]";
-                return new Lot(null, null, tray, lotNumber, type, "sown", sownTime, null, emptyArray, null, null, emptyArray2, true);
+                return new Lot(null, null, tray, lotNumber, type, null, "sown", sownTime, null, emptyArray, null, null, emptyArray2, true);
             }
 
             static importDbLots(jsonString) { //bliver kun kaldt fra html
@@ -145,7 +146,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     var sown = parseISOString(obj.sown);
                     var underlight = parseISOString(obj.underlight);
                     var harvested = parseISOString(obj.harvested);
-                    var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
+                    var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.seedWeight, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
 
                     allLots["row" + newLot.id] = newLot; 
                 }
@@ -169,6 +170,10 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
             set setType(value) {
                 this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=type`);
                 this.type = value;
+            }
+            set setSeedWeight(value) {
+                this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=seedWeight`, true);
+                this.seedWeight = value;
             }
             set setStatus(value) {
                 this.updateDB(`updateLot?id=${this.id}&value=${value}&attribute=status`);
@@ -290,6 +295,14 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     return this.weight;
                 }
             }
+            get getSeedWeight() {
+                if (this.seedWeight == null) {
+                    return "";
+                }
+                else {
+                    return this.seedWeight;
+                }
+            }
 
             addToTable() {
                 var sownSelected = "";
@@ -311,6 +324,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 <td>${this.tray}</td>
                 <td>${this.lot}</td>
                 <td>${this.type}</td>
+                <td><input class="width40" value="${this.getSeedWeight}" onchange="Lot.seedWeightChange(this)"/></td>
                 <td>
                     <select class="status" onchange="Lot.typeChange(this)">
                         <option ${sownSelected} value="sown">sown</option>
@@ -324,7 +338,7 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                     <span class="tooltiptext">${this.getPartialHarvestToolTip}</span>
                 </td>
                 <td class="harvested">${this.getHarvestedAge}</td>
-                <td><input value="${this.getWeight}" onchange="Lot.weightChange(this)"/></td>
+                <td><input class="width40" value="${this.getWeight}" onchange="Lot.weightChange(this)"/></td>
                 <td class="tooltip"><input value="${this.getSentToValue}" onchange="Lot.sentToChange(this)"/>
                     <span class="tooltiptext">${this.getSentToToolTip}</span>
                 </td>
@@ -375,6 +389,11 @@ var allLots = {}; //TODO: fuld denne ud fra backend. key er id og value er objec
                 var lotObject = fromDomElementToObject(element);
                 lotObject.setSentTo = element.value;
             }
+            static seedWeightChange(element) {
+                var lotObject = fromDomElementToObject(element);
+                lotObject.setSeedWeight = element.value;
+            }
+
             static weightChange(element) {
                 var lotObject = fromDomElementToObject(element);
                 lotObject.setWeight = element.value;

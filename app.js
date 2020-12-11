@@ -194,7 +194,7 @@ app.get('/admin-panel/export', function (req, res) {
         var correctjsonString = correctjsonStringTMP.replace(/&#39;/g, "'");
         var arrayOfObjects = JSON.parse(correctjsonString);
 
-        var returnString = "shelf, tray, lot number, type, status, lot sown, lot under light, partial harvested gram, partial harvested date, lot harvested, weight, sent to\n";
+        var returnString = "shelf, tray, lot number, type, seedWeight, status, lot sown, lot under light, partial harvested gram, partial harvested date, lot harvested, weight, sent to\n";
 
         for (var i = 0; i < arrayOfObjects.length; i++) {
             var obj = arrayOfObjects[i];
@@ -245,12 +245,12 @@ app.get('/admin-panel/export', function (req, res) {
             if (partialHarvest.length != 0) {
                 for (var j = 0; j < partialHarvest.length; j++) {
                     var correctPartialHarvestDate = yyyymmdd(partialHarvest[j]["date"]);
-                    returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.status}, ${sown}, ${underlight}, ${partialHarvest[j]["gram"]}, ${correctPartialHarvestDate}, ${harvested}, ${obj.weight}, ${sentToString}\n`;
+                    returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.seedWeight}, ${obj.status}, ${sown}, ${underlight}, ${partialHarvest[j]["gram"]}, ${correctPartialHarvestDate}, ${harvested}, ${obj.weight}, ${sentToString}\n`;
                 }
             }
             else {
                 //bare går det på en normal måde, så det kun bliver en enkelt linje. 
-                returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.status}, ${sown}, ${underlight}, , , ${harvested}, ${obj.weight}, ${sentToString}\n`;
+                returnString += `${obj.shelf}, ${obj.tray}, ${obj.lot}, ${obj.type}, ${obj.seedWeight}, ${obj.status}, ${sown}, ${underlight}, , , ${harvested}, ${obj.weight}, ${sentToString}\n`;
             }
 
             // //var newLot = new Lot(obj.id, obj.shelf, obj.tray, obj.lot, obj.type, obj.status, sown, underlight, obj.partialHarvest, harvested, obj.weight, obj.sentTo);
@@ -362,8 +362,8 @@ app.get('/admin-panel/newLot', function (req, res) { //til indsæt test lot fra a
 
     var valuesArray = values.split("_");
 
-    var columns = "`shelf`, `tray`, `lot`, `type`, `status`, `sown`, `underlight`, `partialHarvest`, `harvested`, `weight`, `sentTo`";
-    var valuesStringTmp = `${valuesArray[0]}, ${valuesArray[1]}, '${valuesArray[2]}', '${valuesArray[3]}', '${valuesArray[4]}', '${valuesArray[5]}', '${valuesArray[6]}', '${valuesArray[7]}', '${valuesArray[8]}', ${valuesArray[9]}, '${valuesArray[10]}'`;
+    var columns = "`shelf`, `tray`, `lot`, `type`, 'seedWeight', `status`, `sown`, `underlight`, `partialHarvest`, `harvested`, `weight`, `sentTo`";
+    var valuesStringTmp = `${valuesArray[0]}, ${valuesArray[1]}, '${valuesArray[2]}', '${valuesArray[3]}', ${valuesArray[4]}, '${valuesArray[5]}', '${valuesArray[6]}', '${valuesArray[7]}', '${valuesArray[8]}', '${valuesArray[9]}', ${valuesArray[10]}, '${valuesArray[11]}'`;
     var valuesString = valuesStringTmp.replace(/'null'/g, "null");
 
     var query = `insert into lots (${columns}) values (${valuesString});`;
