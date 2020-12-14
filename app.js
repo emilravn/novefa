@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 
 // Sets up secret code for sessions, to determine if user is logged in
 app.use(session({
-    secret: 'secret',
+    secret: 'secret', expires: new Date(Date.now() + (30 * 86400 * 1000)),
     resave: true,
     saveUninitialized: true
 }));
@@ -103,16 +103,11 @@ app.get('/admin-panel/', function (req, res) {
 
 // Scan route
 app.get('/scan', function (req, res) {
-    if (req.session.loggedin) {
         var query = "select count from counter where type = 'lots';";
 
         handleSql(query, "return lots", function (count) {
             res.render(path + 'scan/scan.html', { hej: count[0].count.toString() });
         }); 
-
-    } else {
-        res.send('Please login to view this page!');
-    }
   });
 
 
