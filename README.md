@@ -10,6 +10,11 @@ You either need NPM (Node) or Docker.
 - To start the application, run `node app.js` in the root directory.
 - Visit http://localhost:8080
 
+## Silent-printing
+
+- To get rid of print dialogs when printing labels
+- open cmd, navigate to 'Program Files (x86)\Google\Chrome\Application'
+- run 'chrome.exe --kiosk-printing localhost:8080'
 ## Docker
 
 - Make sure to install Docker on your machine.
