@@ -1,6 +1,6 @@
 # How to run locally
 
-You either need NPM (Node) or Docker.
+You either need NPM (Node).
 
 ## NPM
 
